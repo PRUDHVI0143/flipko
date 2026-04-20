@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}My Profile | Flipko{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body text-center">
+                <i class="fas fa-user-circle fa-5x text-primary mb-3"></i>
+                <h5 class="fw-bold">Hello,</h5>
+                <h4 class="fw-bold">{{ user.username }}</h4>
+            </div>
+        </div>
+        <div class="list-group shadow-sm border-0">
+            <a href="{% url 'profile' %}" class="list-group-item list-group-item-action active" aria-current="true">
+                <i class="fas fa-user me-2"></i> Profile Information
+            </a>
+            <a href="{% url 'settings' %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-cog me-2"></i> Account Settings
+            </a>
+            <a href="{% url 'cart_summary' %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-box me-2"></i> My Cart
+            </a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card shadow-sm border-0 mb-4 p-3">
+            <div class="card-body">
+                <h4 class="fw-bold mb-4 border-bottom pb-2">Personal Information</h4>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">First Name</div>
+                    <div class="col-sm-9 fw-semibold">{{ user.first_name|default:"Not provided" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Last Name</div>
+                    <div class="col-sm-9 fw-semibold">{{ user.last_name|default:"Not provided" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Email Address</div>
+                    <div class="col-sm-9 fw-semibold">{{ user.email|default:"Not provided" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Username</div>
+                    <div class="col-sm-9 fw-semibold">{{ user.username }}</div>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'settings' %}" class="btn btn-primary px-4 fw-bold">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

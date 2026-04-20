@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Order #FLK-{{ order.id }} | Flipko{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_list' %}">My Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order Detail</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Order Details</h2>
+        <div class="text-end">
+            <div class="text-muted small fw-bold text-uppercase">Ordered on {{ order.created_at|date:"d F Y" }}</div>
+            <div class="fw-bold fs-5">#FLK-{{ order.id }}</div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Column: Product Items -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Items in Order ({{ order.items.count }})</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for item in order.items.all %}
+                        <div class="list-group-item p-3">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}"
+                                        style="width: 80px; height: 80px; object-fit: contain;"
+                                        alt="{{ item.product.name }}">
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    <h6 class="fw-bold mb-1">{{ item.product.name }}</h6>
+                                    <div class="text-muted small mb-2">Quantity: {{ item.quantity }}</div>
+                                    <div class="fw-bold text-success">₹{{ item.price }}</div>
+                                </div>
+                                <div class="col-auto text-end">
+                                    <div class="fw-bold">₹{{ item.get_cost }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Tracking (Mockup) -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body py-4">
+                    <h5 class="fw-bold mb-4">Order Status: <span class="text-primary">{{ order.status }}</span></h5>
+                    <div class="d-flex justify-content-between position-relative mb-5"
+                        style="z-index: 1; --progress-width: {% if order.status == 'Pending' %}0%{% elif order.status == 'Processing' %}25%{% elif order.status == 'Shipped' %}50%{% elif order.status == 'Delivered' %}75%{% endif %};">
+                        <div class="text-center" style="width: 25%;">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2"
+                                style="width: 40px; height: 40px;">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="small fw-bold">Confirmed</div>
+                            <div class="text-muted small" style="font-size: 10px;">{{ order.created_at|date:"d M" }}
+                            </div>
+                        </div>
+                        <div class="text-center" style="width: 25%;">
+                            <div class="rounded-circle {% if order.status != 'Pending' %}bg-primary text-white{% else %}bg-light text-muted border{% endif %} d-flex align-items-center justify-content-center mx-auto mb-2"
+                                style="width: 40px; height: 40px;">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="small fw-bold">Packed</div>
+                        </div>
+                        <div class="text-center" style="width: 25%;">
+                            <div class="rounded-circle {% if order.status == 'Shipped' or order.status == 'Delivered' %}bg-primary text-white{% else %}bg-light text-muted border{% endif %} d-flex align-items-center justify-content-center mx-auto mb-2"
+                                style="width: 40px; height: 40px;">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="small fw-bold">Shipped</div>
+                        </div>
+                        <div class="text-center" style="width: 25%;">
+                            <div class="rounded-circle {% if order.status == 'Delivered' %}bg-success text-white{% else %}bg-light text-muted border{% endif %} d-flex align-items-center justify-content-center mx-auto mb-2"
+                                style="width: 40px; height: 40px;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="small fw-bold">Delivered</div>
+                        </div>
+                        <!-- Line behind -->
+                        <div class="position-absolute bg-light"
+                            style="height: 4px; width: 75%; top: 18px; left: 12.5%; z-index: -1;"></div>
+                        <div class="position-absolute bg-primary"
+                            style="height: 4px; width: var(--progress-width); top: 18px; left: 12.5%; z-index: -1; transition: width 1s;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Shipping & Payment -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Delivery Address</h5>
+                </div>
+                <div class="card-body">
+                    <div class="fw-bold mb-1">{{ order.first_name }} {{ order.last_name }}</div>
+                    <div class="text-muted small mb-2">
+                        {{ order.address }}<br>
+                        {{ order.city }}, {{ order.state }} - {{ order.pincode }}
+                    </div>
+                    <div class="fw-semibold small">Phone: {{ order.phone }}</div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Price Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Item Total</span>
+                        <span>₹{{ order.total_amount }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                        <span class="text-muted">Delivery Charges</span>
+                        <span>FREE</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total Paid</span>
+                        <span class="text-success">₹{{ order.total_amount }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{% url 'order_list' %}" class="btn btn-outline-primary w-100 mt-4 fw-bold">← Back to My Orders</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

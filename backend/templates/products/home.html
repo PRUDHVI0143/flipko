@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% block title %}Online Shopping Site for Mobiles, Electronics, Furniture, Grocery, Lifestyle, Books & More. Best
+Offers!{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<!-- ══════════════════════════════════════
+     3-PANEL AD BANNER (AAA UPGRADED)
+══════════════════════════════════════ -->
+<style>
+    .hero-ad-slider {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        margin-top: 1.5rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+        height: 500px;
+        background-color: #f8fafc;
+    }
+
+    .hero-slide {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 4rem 5rem;
+        color: #000;
+        background-size: cover;
+        background-position: center;
+        z-index: 1;
+    }
+
+    .hero-slide::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: -1;
+    }
+
+    .slide-bg-1 { background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop'); }
+    .slide-bg-1::before { background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, transparent 100%); }
+
+    .slide-bg-2 { background-image: url('{% static "images/gadget_fest.png" %}'); }
+    .slide-bg-2::before { background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, transparent 100%); }
+
+    .slide-bg-3 { background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop'); }
+    .slide-bg-3::before { background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, transparent 100%); }
+
+    .hero-content {
+        max-width: 650px;
+        position: relative;
+        z-index: 10;
+        animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        background: rgba(0,0,0,0.05);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0,0,0,0.1);
+        color: #d97706; /* Darker amber for contrast */
+        text-transform: uppercase;
+    }
+
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 900;
+        line-height: 1.05;
+        margin-bottom: 1.25rem;
+        background: linear-gradient(to right, #000000, #334155);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1.5px;
+    }
+
+    .hero-desc {
+        font-size: 1.25rem;
+        color: rgba(0,0,0,0.85); /* Black description */
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+        font-weight: 500;
+    }
+
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        padding: 1.1rem 2.5rem;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff !important;
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    .hero-cta:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 35px rgba(37, 99, 235, 0.4);
+    }
+
+    .hero-cta i {
+        margin-left: 0.75rem;
+        transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover i {
+        transform: translateX(6px);
+    }
+
+    .hero-shape-1, .hero-shape-2 {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0;
+        animation: float 12s infinite ease-in-out alternate;
+        pointer-events: none;
+    }
+    
+    .hero-shape-1 {
+        top: -150px;
+        left: 10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(59, 130, 246, 0.2);
+    }
+    
+    .hero-shape-2 {
+        bottom: -150px;
+        left: 40%;
+        width: 500px;
+        height: 500px;
+        background: rgba(250, 204, 21, 0.2);
+        animation-delay: -5s;
+    }
+
+    @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(50px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(50px, 40px) scale(1.15); }
+    }
+
+    .hero-slider-control {
+        width: 56px;
+        height: 56px;
+        background: rgba(255,255,255,0.1) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 20;
+    }
+    .hero-ad-slider:hover .hero-slider-control {
+        opacity: 1;
+    }
+    .hero-slider-control:hover {
+        background: rgba(255,255,255,0.25) !important;
+        transform: translateY(-50%) scale(1.1);
+    }
+    .carousel-control-prev.hero-slider-control { left: 30px; }
+    .carousel-control-next.hero-slider-control { right: 30px; }
+
+    .hero-indicators {
+        bottom: 25px;
+        z-index: 20;
+        margin: 0;
+        padding: 0;
+        gap: 8px;
+    }
+    .hero-indicators button {
+        width: 35px !important;
+        height: 4px !important;
+        border-radius: 4px;
+        border: none !important;
+        background-color: rgba(255,255,255,0.3) !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        padding: 0;
+        margin: 0;
+        min-height: 4px; /* Fix bootstrap bug empty dots */
+    }
+    .hero-indicators button.active {
+        width: 50px !important;
+        background-color: #facc15 !important;
+        box-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        .hero-ad-slider { height: 420px; border-radius: 16px; padding: 0.5rem; }
+        .hero-slide { padding: 2rem; justify-content: center; text-align: center; }
+        .slide-bg-1::before, .slide-bg-2::before, .slide-bg-3::before {
+            background: linear-gradient(180deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0.95) 100%);
+        }
+        .hero-title { font-size: 2.8rem; }
+        .hero-desc { font-size: 1rem; }
+        .hero-slider-control { display: none; }
+    }
+</style>
+
+<div class="hero-ad-slider carousel slide" id="premiumAdCarousel" data-bs-ride="carousel" data-bs-interval="4500" data-bs-pause="hover">
+    <!-- Abstract ambient lighting -->
+    <div class="hero-shape-1"></div>
+    <div class="hero-shape-2"></div>
+    
+    <!-- Custom Indicators -->
+    <div class="carousel-indicators hero-indicators">
+        <button type="button" data-bs-target="#premiumAdCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#premiumAdCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#premiumAdCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <div class="carousel-inner h-100">
+        
+        <!-- Slide 1: Big Sale -->
+        <div class="carousel-item active h-100 slide-bg-1">
+            <div class="hero-slide">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fas fa-bolt me-1"></i> SALE LIVE</span>
+                    <h2 class="hero-title">Big Billion Days</h2>
+                    <p class="hero-desc">Discover unprecedented discounts on millions of products. Upgrade your tech, home, and lifestyle at up to <strong>80% OFF</strong>.</p>
+                    <a href="{% url 'home' %}" class="hero-cta">Shop The Sale <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Tech/Electronics -->
+        <div class="carousel-item h-100 slide-bg-2">
+            <div class="hero-slide">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fas fa-laptop me-1"></i> GADGET FEST</span>
+                    <h2 class="hero-title">Premium Tech</h2>
+                    <p class="hero-desc">Elevate your workspace and entertainment with bleeding-edge electronics. Top-tier Laptops and Phones starting at just <strong>₹4,999</strong>.</p>
+                    <a href="?category=electronics" class="hero-cta">Explore Electronics <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Fashion -->
+        <div class="carousel-item h-100 slide-bg-3">
+            <div class="hero-slide">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fas fa-tshirt me-1"></i> STYLE REDEFINED</span>
+                    <h2 class="hero-title">Fashion Week</h2>
+                    <p class="hero-desc">Refresh your wardrobe with the latest seasonal drops. Exclusive designer collections and everyday essentials at stunning markdowns.</p>
+                    <a href="?category=fashion" class="hero-cta">Shop Fashion <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <button class="carousel-control-prev hero-slider-control" type="button" data-bs-target="#premiumAdCarousel" data-bs-slide="prev">
+        <i class="fas fa-chevron-left fa-lg"></i>
+    </button>
+    <button class="carousel-control-next hero-slider-control" type="button" data-bs-target="#premiumAdCarousel" data-bs-slide="next">
+        <i class="fas fa-chevron-right fa-lg"></i>
+    </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     CATEGORY ICON GRID (Flipkart-style)
+══════════════════════════════════════ -->
+<div class="fk-categories-section">
+    <div class="fk-cat-grid">
+
+        {% for cat in categories %}
+        <a href="?category={{ cat.slug }}" class="fk-cat-item text-decoration-none">
+            <div class="fk-cat-icon-wrap
+                {% if cat.slug == 'mobiles' %}fk-ci-blue
+                {% elif cat.slug == 'electronics' %}fk-ci-purple
+                {% elif cat.slug == 'fashion' %}fk-ci-pink
+                {% elif cat.slug == 'home-furniture' %}fk-ci-teal
+                {% elif cat.slug == 'books' %}fk-ci-orange
+                {% elif cat.slug == 'comics-manga' %}fk-ci-red
+                {% elif cat.slug == 'appliances' %}fk-ci-green
+                {% elif cat.slug == 'food-health' %}fk-ci-yellow
+                {% elif cat.slug == 'toys-baby' %}fk-ci-cyan
+                {% elif cat.slug == 'beauty' %}fk-ci-rose
+                {% else %}fk-ci-indigo{% endif %}">
+                {% if cat.slug == 'mobiles' %}
+                <i class="fas fa-mobile-alt"></i>
+                {% elif cat.slug == 'electronics' %}
+                <i class="fas fa-laptop"></i>
+                {% elif cat.slug == 'fashion' %}
+                <i class="fas fa-tshirt"></i>
+                {% elif cat.slug == 'home-furniture' %}
+                <i class="fas fa-couch"></i>
+                {% elif cat.slug == 'books' %}
+                <i class="fas fa-book"></i>
+                {% elif cat.slug == 'comics-manga' %}
+                <i class="fas fa-book-open"></i>
+                {% elif cat.slug == 'appliances' %}
+                <i class="fas fa-blender"></i>
+                {% elif cat.slug == 'food-health' %}
+                <i class="fas fa-utensils"></i>
+                {% elif cat.slug == 'toys-baby' %}
+                <i class="fas fa-baby"></i>
+                {% elif cat.slug == 'beauty' %}
+                <i class="fas fa-spa"></i>
+                {% else %}
+                <i class="fas fa-box"></i>
+                {% endif %}
+            </div>
+            <span class="fk-cat-label">{{ cat.name }}</span>
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DEAL OF THE DAY STRIP
+══════════════════════════════════════ -->
+<div class="fk-deal-bar">
+    <div class="fk-deal-bar-inner">
+        <div class="fk-deal-left">
+            <span class="fk-deal-title">Deal of the Day</span>
+            <div class="fk-countdown-wrap">
+                <div class="fk-cd-block"><span id="cd-h">00</span><small>Hrs</small></div>
+                <span class="fk-cd-sep">:</span>
+                <div class="fk-cd-block"><span id="cd-m">00</span><small>Min</small></div>
+                <span class="fk-cd-sep">:</span>
+                <div class="fk-cd-block"><span id="cd-s">00</span><small>Sec</small></div>
+            </div>
+        </div>
+        <a href="{% url 'home' %}" class="fk-deal-view-all">View All <i class="fas fa-chevron-right fa-xs ms-1"></i></a>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     BEST DEALS — Horizontal Scroll
+══════════════════════════════════════ -->
+<div class="fk-section-card mb-3">
+    <div class="fk-section-header">
+        <h2 class="fk-section-title">Best Deals</h2>
+        <a href="{% url 'home' %}" class="fk-view-all-btn">VIEW ALL <i class="fas fa-chevron-right fa-xs ms-1"></i></a>
+    </div>
+    <div class="fk-hscroll">
+        {% for product in products %}
+        {% if forloop.counter <= 8 %} <a href="{% url 'product_detail' product.id %}"
+            class="fk-hcard text-decoration-none">
+            <div class="fk-hcard-img-wrap">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="fk-hcard-img">
+                {% else %}
+                <div class="fk-hcard-noimg"><i class="fas fa-box fa-2x text-muted"></i></div>
+                {% endif %}
+            </div>
+            <p class="fk-hcard-name text-truncate">{{ product.name }}</p>
+            <p class="fk-hcard-price">₹{{ product.price }}</p>
+            <span class="fk-hcard-off">{{ product.category.name }}</span>
+            </a>
+            {% endif %}
+            {% endfor %}
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TOP OFFERS — Category Quick Cards
+══════════════════════════════════════ -->
+<div class="fk-section-card mb-3">
+    <div class="fk-section-header">
+        <h2 class="fk-section-title">🔥 Top Offers</h2>
+        <a href="{% url 'home' %}" class="fk-view-all-btn">VIEW ALL <i class="fas fa-chevron-right fa-xs ms-1"></i></a>
+    </div>
+    <div class="fk-offer-grid">
+        <a href="{% url 'home' %}" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">
+            <i class="fas fa-bolt fa-2x mb-2"></i><span>Flash Sale</span><strong>Up to 80% off</strong>
+        </a>
+        <a href="?category=mobiles" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#4facfe,#00f2fe);">
+            <i class="fas fa-mobile-alt fa-2x mb-2"></i><span>Mobiles</span><strong>Up to 45% off</strong>
+        </a>
+        <a href="?category=electronics" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#a18cd1,#fbc2eb);">
+            <i class="fas fa-laptop fa-2x mb-2"></i><span>Electronics</span><strong>Up to 60% off</strong>
+        </a>
+        <a href="?category=fashion" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#f093fb,#f5576c);">
+            <i class="fas fa-tshirt fa-2x mb-2"></i><span>Fashion</span><strong>Up to 70% off</strong>
+        </a>
+        <a href="?category=home-furniture" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#43e97b,#38f9d7);">
+            <i class="fas fa-couch fa-2x mb-2"></i><span>Home & Living</span><strong>Up to 55% off</strong>
+        </a>
+        <a href="?category=appliances" class="fk-offer-tile text-decoration-none"
+            style="background:linear-gradient(135deg,#fa8231,#f7b731);">
+            <i class="fas fa-blender fa-2x mb-2"></i><span>Appliances</span><strong>Up to 40% off</strong>
+        </a>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN PRODUCT GRID
+══════════════════════════════════════ -->
+<div class="fk-section-card">
+    <div class="fk-section-header">
+        <h2 class="fk-section-title">
+            {% if request.GET.q %}
+            Results for "{{ request.GET.q }}"
+            {% elif request.GET.category %}
+            {{ request.GET.category|title }}
+            {% else %}
+            Top Deals on Products
+            {% endif %}
+        </h2>
+        {% if not request.GET.q and not request.GET.category %}
+        <a href="{% url 'home' %}" class="fk-view-all-btn">VIEW ALL <i class="fas fa-chevron-right fa-xs ms-1"></i></a>
+        {% endif %}
+    </div>
+
+    <div class="fk-product-grid">
+        {% for product in products %}
+        <div class="fk-prod-card-wrap">
+            <div class="fk-prod-card">
+                <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+                    <div class="fk-prod-img-wrap">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="fk-prod-img">
+                        {% else %}
+                        <div class="fk-prod-no-img"><i class="fas fa-image fa-3x text-muted opacity-40"></i></div>
+                        {% endif %}
+                    </div>
+                    <div class="fk-prod-body">
+                        <p class="fk-prod-name">{{ product.name }}</p>
+                        <div class="fk-prod-rating">
+                            <span class="fk-rating-pill"><i class="fas fa-star fa-xs me-1"></i>4.3</span>
+                            <span class="fk-rating-count">(1.2k)</span>
+                        </div>
+                        <div class="fk-prod-price-row">
+                            <span class="fk-prod-price">₹{{ product.price }}</span>
+                            <span class="fk-prod-off">20% off</span>
+                        </div>
+                        <p class="fk-prod-cat">{{ product.category.name }}</p>
+                        {% if product.stock > 0 %}
+                        <span class="fk-stock-badge fk-in-stock">In Stock</span>
+                        {% else %}
+                        <span class="fk-stock-badge fk-out-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </a>
+                <!-- Wishlist -->
+                {% if user.is_authenticated %}
+                <button class="wishlist-btn fk-wish-btn border-0 bg-transparent" data-product-id="{{ product.id }}"
+                    data-url="{% url 'toggle_wishlist' product.id %}">
+                    {% if product.id in wishlist_product_ids %}
+                    <i class="fas fa-heart text-danger"></i>
+                    {% else %}
+                    <i class="far fa-heart text-muted"></i>
+                    {% endif %}
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}" class="fk-wish-btn" title="Login to wishlist">
+                    <i class="far fa-heart text-muted"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 py-5 text-center">
+            <i class="fas fa-search fa-3x text-muted mb-3 d-block opacity-50"></i>
+            <h4 class="text-muted">No products found.</h4>
+            <a href="{% url 'home' %}" class="btn btn-outline-primary mt-2">Browse All</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Countdown Script -->
+<script>
+    (function () {
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+        function tick() {
+            var now = new Date(), end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            var diff = Math.max(0, Math.floor((end - now) / 1000));
+            document.getElementById('cd-h').textContent = pad(Math.floor(diff / 3600));
+            document.getElementById('cd-m').textContent = pad(Math.floor((diff % 3600) / 60));
+            document.getElementById('cd-s').textContent = pad(diff % 60);
+        }
+        tick(); setInterval(tick, 1000);
+    })();
+</script>
+{% endblock %}

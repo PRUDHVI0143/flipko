@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" id="fk-html-root">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flipko{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    {% load static %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- ═══════════════════════════════════
+         TOP NAVBAR
+    ═══════════════════════════════════ -->
+    <nav class="flipko-navbar sticky-top py-0 shadow-sm">
+        <div class="fk-nav-inner d-flex align-items-center gap-0">
+
+            <!-- Logo -->
+            <a class="fk-logo-wrap text-decoration-none" href="{% url 'home' %}">
+                <div class="fk-logo" style="display: flex; align-items: center; gap: 10px; transition: transform 0.2s ease;">
+                    <div style="background: #3b82f6; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 15px rgba(59, 130, 246, 0.35); border-bottom: 3px solid #1e3a8a;">
+                        <span style="color: #ffffff; font-weight: 900; font-size: 20px; font-family: 'Inter', sans-serif; letter-spacing: -1px; transform: skewX(-10deg);">fk</span>
+                    </div>
+                    <span style="font-size: 26px; font-weight: 800; color: var(--fk-text); letter-spacing: -0.5px; font-family: 'Inter', sans-serif;">
+                        Flip<span style="color: #3b82f6;">ko</span><span style="color: #facc15; font-size: 30px; line-height: 0;">.</span>
+                    </span>
+                </div>
+            </a>
+
+            <!-- Search Bar -->
+            <form class="fk-search-form flex-grow-1" action="{% url 'home' %}" method="GET">
+                <div class="fk-search-inner">
+                    <i class="fas fa-search fk-search-icon"></i>
+                    <input type="search" class="fk-search-input" placeholder="Search for Products, Brands and More"
+                        name="q" value="{{ request.GET.q }}">
+                    <button type="submit" class="fk-search-btn">Search</button>
+                </div>
+            </form>
+
+            <!-- Right menu -->
+            <div class="fk-nav-right d-flex align-items-center gap-1">
+
+                {% if user.is_authenticated %}
+                <!-- User Dropdown -->
+                <div class="fk-nav-item dropdown" id="userDropdown">
+                    <div class="fk-nav-btn d-flex align-items-center gap-1" role="button">
+                        <i class="fas fa-user-circle fk-nav-icon"></i>
+                        <span class="fk-nav-label">{{ user.username }}</span>
+                        <i class="fas fa-chevron-down fk-caret"></i>
+                    </div>
+                    <div class="fk-dropdown-menu">
+                        <div class="fk-dropdown-header">
+                            <span class="fk-dh-hello">Hello, <strong>{{ user.username }}</strong></span>
+                        </div>
+                        <a class="fk-dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> My
+                            Profile</a>
+                        <a class="fk-dropdown-item" href="{% url 'order_list' %}"><i class="fas fa-box"></i> Orders</a>
+                        <a class="fk-dropdown-item" href="{% url 'wishlist' %}"><i class="fas fa-heart"></i>
+                            Wishlist</a>
+                        <a class="fk-dropdown-item" href="{% url 'rewards' %}"><i class="fas fa-gift"></i> Rewards</a>
+                        <a class="fk-dropdown-item" href="{% url 'gift_cards' %}"><i class="fas fa-credit-card"></i>
+                            Gift Cards</a>
+                        {% if user.is_staff %}
+                        <a class="fk-dropdown-item" href="{% url 'add_product' %}"><i
+                                class="fas fa-plus-circle text-success"></i> Add Product</a>
+                        {% else %}
+                        <a class="fk-dropdown-item" href="{% url 'become_seller' %}"><i class="fas fa-store"></i> Become
+                            a Seller</a>
+                        {% endif %}
+                        <div class="fk-dropdown-divider"></div>
+                        <form method="post" action="{% url 'logout' %}" class="m-0 p-0">
+                            {% csrf_token %}
+                            <button type="submit" class="fk-dropdown-item w-100 text-start border-0 bg-transparent">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Login Button + Dropdown -->
+                <div class="fk-nav-item dropdown" id="loginDropdown">
+                    <div class="fk-login-btn d-flex align-items-center gap-1" role="button">
+                        <span class="fk-login-text">Login</span>
+                        <i class="fas fa-chevron-down fk-caret"></i>
+                    </div>
+                    <div class="fk-dropdown-menu">
+                        <div class="fk-dropdown-header d-flex align-items-center justify-content-between">
+                            <span class="fk-dh-new">New customer?</span>
+                            <a href="{% url 'register' %}" class="fk-dh-signup">Sign Up</a>
+                        </div>
+                        <a class="fk-dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> My
+                            Profile</a>
+                        <a class="fk-dropdown-item" href="{% url 'order_list' %}"><i class="fas fa-box"></i> Orders</a>
+                        <a class="fk-dropdown-item" href="{% url 'wishlist' %}"><i class="fas fa-heart"></i>
+                            Wishlist</a>
+                        <a class="fk-dropdown-item" href="{% url 'become_seller' %}"><i class="fas fa-store"></i> Become
+                            a Seller</a>
+                        <a class="fk-dropdown-item" href="{% url 'rewards' %}"><i class="fas fa-gift"></i> Rewards</a>
+                        <a class="fk-dropdown-item" href="{% url 'customer_care' %}"><i class="fas fa-headset"></i> 24x7
+                            Customer Care</a>
+                        <a class="fk-dropdown-item" href="{% url 'advertise' %}"><i class="fas fa-chart-line"></i>
+                            Advertise</a>
+                        <a class="fk-dropdown-item" href="{% url 'download_app' %}"><i class="fas fa-download"></i>
+                            Download App</a>
+                        <div class="fk-dropdown-divider"></div>
+                        <a class="fk-dropdown-item fw-bold text-primary" href="{% url 'login' %}"><i
+                                class="fas fa-sign-in-alt"></i> Login</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- More Dropdown -->
+                <div class="fk-nav-item dropdown" id="moreDropdown">
+                    <div class="fk-nav-btn d-flex align-items-center gap-1" role="button">
+                        <span class="fk-nav-label">More</span>
+                        <i class="fas fa-chevron-down fk-caret"></i>
+                    </div>
+                    <div class="fk-dropdown-menu">
+                        <a class="fk-dropdown-item" href="{% url 'notifications' %}"><i class="fas fa-bell"></i>
+                            Notification Preferences</a>
+                        <a class="fk-dropdown-item" href="{% url 'customer_care' %}"><i class="fas fa-headset"></i> 24x7
+                            Customer Care</a>
+                        <a class="fk-dropdown-item" href="{% url 'advertise' %}"><i class="fas fa-chart-line"></i>
+                            Advertise</a>
+                        <a class="fk-dropdown-item" href="{% url 'download_app' %}"><i class="fas fa-download"></i>
+                            Download App</a>
+                    </div>
+                </div>
+
+                <!-- Dark/Light Mode Toggle -->
+                <button class="fk-theme-toggle" id="themeToggle" title="Toggle dark/light mode"
+                    onclick="fkToggleTheme()">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+
+                <!-- Cart -->
+                <a class="fk-cart-btn text-decoration-none" href="{% url 'cart_summary' %}">
+                    <i class="fas fa-shopping-cart fk-cart-icon"></i>
+                    <span class="fk-cart-label">Cart</span>
+                </a>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="fk-main">
+        <!-- Messages -->
+        {% if messages %}
+        <div class="fk-messages-wrap">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-0 rounded-0" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="fk-footer">
+        <div class="fk-footer-top">
+            <div class="container">
+                <div class="row g-4 py-5">
+                    <div class="col-6 col-md-3">
+                        <h6 class="fk-footer-heading">ABOUT</h6>
+                        <ul class="fk-footer-links">
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Flipko Stories</a></li>
+                            <li><a href="#">Press</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h6 class="fk-footer-heading">HELP</h6>
+                        <ul class="fk-footer-links">
+                            <li><a href="#">Payments</a></li>
+                            <li><a href="#">Shipping</a></li>
+                            <li><a href="#">Cancellation & Returns</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Report Infringement</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h6 class="fk-footer-heading">POLICY</h6>
+                        <ul class="fk-footer-links">
+                            <li><a href="#">Return Policy</a></li>
+                            <li><a href="#">Terms Of Use</a></li>
+                            <li><a href="#">Security</a></li>
+                            <li><a href="#">Privacy</a></li>
+                            <li><a href="#">Sitemap</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h6 class="fk-footer-heading">SOCIAL</h6>
+                        <ul class="fk-footer-links">
+                            <li><a href="#"><i class="fab fa-facebook-f me-2"></i>Facebook</a></li>
+                            <li><a href="#"><i class="fab fa-twitter me-2"></i>Twitter</a></li>
+                            <li><a href="#"><i class="fab fa-youtube me-2"></i>YouTube</a></li>
+                            <li><a href="#"><i class="fab fa-instagram me-2"></i>Instagram</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fk-footer-bottom">
+            <div class="container d-flex flex-wrap align-items-center justify-content-between py-3 gap-2">
+                <span class="fk-footer-brand"><i class="fas fa-bolt text-warning me-1"></i>Flipko</span>
+                <span class="fk-footer-copy">&copy; 2024–2025 Flipko Technologies Pvt. Ltd.</span>
+                <span class="fk-footer-trust"><i class="fas fa-shield-alt me-1 text-warning"></i>100% Secure</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Wishlist AJAX JS -->
+    <script src="{% static 'js/wishlist.js' %}"></script>
+
+    <!-- Dropdown hover JS -->
+    <script>
+        document.querySelectorAll('.fk-nav-item.dropdown').forEach(function (item) {
+            item.addEventListener('mouseenter', function () { this.classList.add('open'); });
+            item.addEventListener('mouseleave', function () { this.classList.remove('open'); });
+        });
+    </script>
+
+    <!-- Dark / Light Mode JS -->
+    <script>
+        (function () {
+            var root = document.getElementById('fk-html-root');
+            var saved = localStorage.getItem('fk-theme') || 'light';
+            if (saved === 'dark') {
+                root.setAttribute('data-theme', 'dark');
+            }
+            // Update icon on load
+            function updateIcon() {
+                var icon = document.getElementById('themeIcon');
+                if (!icon) return;
+                var isDark = root.getAttribute('data-theme') === 'dark';
+                icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            }
+            updateIcon();
+            window.fkToggleTheme = function () {
+                var isDark = root.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    root.removeAttribute('data-theme');
+                    localStorage.setItem('fk-theme', 'light');
+                } else {
+                    root.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('fk-theme', 'dark');
+                }
+                updateIcon();
+            };
+        })();
+    </script>
+</body>
+
+</html>

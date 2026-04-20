@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}My Wishlist — Flipko{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4"><i class="fas fa-heart me-2 text-danger"></i>My Wishlist</h2>
+    {% if items %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for item in items %}
+        <div class="col" id="wishlist-card-{{ item.product.id }}">
+            <div class="card h-100 product-card border-0 shadow-sm">
+                <div class="position-relative">
+                    <a href="{% url 'product_detail' item.product.id %}">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" class="card-img-top"
+                            style="height:200px;object-fit:contain;padding:16px;" alt="{{ item.product.name }}">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
+                            <i class="fas fa-image fa-4x text-muted opacity-50"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    <button
+                        class="wishlist-btn btn btn-sm position-absolute top-0 end-0 m-2 border-0 shadow-sm bg-white rounded-circle"
+                        data-product-id="{{ item.product.id }}" data-url="{% url 'toggle_wishlist' item.product.id %}"
+                        style="width:36px;height:36px;">
+                        <i class="fas fa-heart text-danger"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title fw-semibold text-truncate">{{ item.product.name }}</h6>
+                    <p class="text-success fw-bold mb-1">₹{{ item.product.price }}</p>
+                    <a href="{% url 'add_to_cart' item.product.id %}"
+                        class="btn btn-primary btn-sm w-100 fw-semibold mt-1">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-heart-broken text-muted" style="font-size:5rem;opacity:0.3;"></i>
+        <h4 class="text-muted mt-4 fw-semibold">Your wishlist is empty!</h4>
+        <p class="text-muted">Click the <i class="far fa-heart text-danger"></i> heart on a product to save it here.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary fw-semibold px-5 mt-2">Browse Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

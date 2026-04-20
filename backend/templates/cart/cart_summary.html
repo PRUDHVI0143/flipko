@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Shopping Cart | Flipko{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h4 class="mb-0 fw-bold">Shopping Cart</h4>
+            </div>
+            <div class="card-body p-0">
+                {% if is_empty %}
+                <div class="text-center py-5">
+                    <img src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+                        alt="Empty Cart" class="img-fluid mb-4" style="max-height: 160px;">
+                    <h5 class="fw-semibold">Your cart is empty!</h5>
+                    <p class="text-muted mb-4">Add items to it now.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary px-5 py-2 fw-bold shadow-sm rounded-1">Shop
+                        Now</a>
+                </div>
+                {% else %}
+                <ul class="list-group list-group-flush">
+                    {% for item in items %}
+                    <li class="list-group-item p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 text-center">
+                                {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid"
+                                    style="max-height: 80px; object-fit: contain;">
+                                {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center"
+                                    style="height: 80px; width: 80px;">
+                                    <i class="fas fa-image text-muted fa-2x"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold mb-1">
+                                    <a href="{% url 'product_detail' item.product.id %}"
+                                        class="text-decoration-none text-dark">{{ item.product.name }}</a>
+                                </h6>
+                                <p class="text-muted small mb-2">Category: {{ item.product.category.name }}</p>
+                                <h5 class="fw-bold text-success mb-0">₹{{ item.product.price }}</h5>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="d-flex align-items-center justify-content-end mb-3">
+                                    <span class="text-muted me-2">Qty:</span>
+                                    <span class="fw-bold border px-3 py-1 rounded bg-light">{{ item.quantity }}</span>
+                                </div>
+                                <a href="{% url 'remove_from_cart' item.id %}"
+                                    class="btn btn-sm btn-outline-danger shadow-sm fw-bold">
+                                    <i class="fas fa-trash me-1"></i> REMOVE
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="card-footer bg-white p-3 text-end shadow-sm"
+                    style="position: sticky; bottom: 0; border-top: 1px solid #f0f0f0;">
+                    <a href="{% url 'checkout' %}" class="btn btn-flipko py-2 px-5 fs-5 rounded-1 shadow-sm">PLACE
+                        ORDER</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if not is_empty %}
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 80px;">
+            <div class="card-header bg-white py-3 border-bottom text-muted fw-bold text-uppercase">
+                Price Details
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Price ({{ items.count }} items)</span>
+                    <span>₹{{ total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Discount</span>
+                    <span class="text-success">- ₹0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                    <span>Delivery Charges</span>
+                    <span class="text-success"><span
+                            class="text-decoration-line-through text-muted me-2">₹40</span>Free</span>
+                </div>
+                <div class="d-flex justify-content-between fw-bold fs-5 my-3">
+                    <span>Total Amount</span>
+                    <span>₹{{ total_price }}</span>
+                </div>
+                <p class="text-success fw-semibold small mt-3 mb-0">You will save ₹40 on this order</p>
+            </div>
+        </div>
+        <div class="mt-4 text-muted small d-flex align-items-center">
+            <i class="fas fa-shield-alt fa-2x me-3 text-secondary"></i>
+            <span>Safe and Secure Payments. Easy returns. 100% Authentic products.</span>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

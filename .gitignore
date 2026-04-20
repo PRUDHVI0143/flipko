@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.pyc
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Node / React
+node_modules/
+dist/
+build/
+.cache/
+*.local
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE & OS
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Python scripts used for seeding/utility (optional — remove line to include)
+backend/list_inventory.py
+backend/audit_images.py
+backend/ensure_diversity.py
+backend/product_image_mapping.json

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}24x7 Customer Care — Flipko{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 700px;">
+    <h2 class="fw-bold mb-2"><i class="fas fa-headset me-2 text-primary"></i>24x7 Customer Care</h2>
+    <p class="text-muted mb-4">We're here for you anytime. Reach us via any of the methods below.</p>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
+                <i class="fas fa-phone-alt text-success fa-2x mb-3"></i>
+                <h5 class="fw-bold">Call Us</h5>
+                <p class="text-muted mb-2">Mon – Sun, 6 AM to 10 PM</p>
+                <a href="tel:18001234567" class="btn btn-outline-success fw-semibold">1800-123-4567</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
+                <i class="fas fa-comments text-primary fa-2x mb-3"></i>
+                <h5 class="fw-bold">Live Chat</h5>
+                <p class="text-muted mb-2">Get instant help from our bot or agent</p>
+                <button class="btn btn-primary fw-semibold">Start Chat</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
+                <i class="fas fa-envelope text-warning fa-2x mb-3"></i>
+                <h5 class="fw-bold">Email Support</h5>
+                <p class="text-muted mb-2">We'll reply within 24 hours</p>
+                <a href="mailto:support@flipko.com" class="btn btn-outline-warning fw-semibold">support@flipko.com</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
+                <i class="fas fa-question-circle text-danger fa-2x mb-3"></i>
+                <h5 class="fw-bold">Help Center</h5>
+                <p class="text-muted mb-2">Search our FAQ for quick answers</p>
+                <button class="btn btn-outline-danger fw-semibold">Browse FAQs</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

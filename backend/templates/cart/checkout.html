@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block title %}Checkout | Flipko{% endblock %}
+
+{% block content %}
+<style>
+    .step-number {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .step-done .step-number {
+        background: #2874f0;
+        color: white;
+    }
+
+    .step-active .step-number {
+        background: #2874f0;
+        color: white;
+    }
+
+    .step-inactive .step-number {
+        background: #eee;
+        color: #999;
+    }
+
+    .step-active {
+        border-left: 3px solid #2874f0 !important;
+    }
+
+    .payment-option {
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+    }
+
+    .payment-option:hover {
+        border-color: #2874f0 !important;
+        background: #f0f5ff !important;
+    }
+
+    .payment-option.selected {
+        border-color: #2874f0 !important;
+        background: #f0f5ff !important;
+    }
+</style>
+
+<div class="row mt-4 g-4">
+    <div class="col-lg-8">
+
+        <!-- STEP 1: Login (done) -->
+        <div class="card shadow-sm border-0 mb-3 step-done">
+            <div class="card-body py-3 d-flex align-items-center gap-3">
+                <span class="step-number">✓</span>
+                <div>
+                    <small class="text-muted fw-bold text-uppercase">Login</small>
+                    <div class="fw-semibold">{{ user.username }} &nbsp;<span class="text-muted small">{{
+                            user.email|default:"No email set" }}</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Delivery Address (active/expandable) -->
+        <div class="card shadow-sm border-0 mb-3 border-start border-3 step-active">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="step-number">2</span>
+                    <h6 class="fw-bold mb-0 text-uppercase text-primary">Delivery Address</h6>
+                </div>
+                <form method="post" id="checkout-form">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Full Name</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="Enter full name"
+                                value="{{ user.get_full_name|default:user.username }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control" placeholder="10-digit mobile number"
+                                required>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold small">Address (House No, Building, Street)</label>
+                            <input type="text" name="address" class="form-control"
+                                placeholder="House No, Floor, Building" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">Pincode</label>
+                            <input type="text" name="pincode" class="form-control" placeholder="6-digit pincode"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">City / Town</label>
+                            <input type="text" name="city" class="form-control" placeholder="City" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">State</label>
+                            <select name="state" class="form-select" required>
+                                <option value="">Select State</option>
+                                <option>Andhra Pradesh</option>
+                                <option>Delhi</option>
+                                <option>Goa</option>
+                                <option>Gujarat</option>
+                                <option>Karnataka</option>
+                                <option>Kerala</option>
+                                <option>Maharashtra</option>
+                                <option>Rajasthan</option>
+                                <option>Tamil Nadu</option>
+                                <option>Telangana</option>
+                                <option>Uttar Pradesh</option>
+                                <option>West Bengal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">Address Type</label>
+                            <div class="d-flex gap-2 mt-1">
+                                <input type="radio" class="btn-check" name="addr_type" id="home" value="home" checked>
+                                <label class="btn btn-outline-secondary btn-sm" for="home">🏠 Home</label>
+                                <input type="radio" class="btn-check" name="addr_type" id="work" value="work">
+                                <label class="btn btn-outline-secondary btn-sm" for="work">🏢 Work</label>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Payment -->
+        <div class="card shadow-sm border-0 mb-3 step-active border-start border-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="step-number">3</span>
+                    <h6 class="fw-bold mb-0 text-uppercase text-primary">Payment Options</h6>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="payment-option border rounded-3 p-3 d-flex align-items-center gap-3 selected"
+                            id="pay-upi" onclick="selectPayment('upi')">
+                            <i class="fas fa-qrcode text-primary fa-2x"></i>
+                            <div>
+                                <div class="fw-semibold">UPI</div>
+                                <small class="text-muted">Pay via PhonePe, Google Pay, Paytm, BHIM</small>
+                            </div>
+                            <input type="radio" name="payment_method" value="upi" class="ms-auto form-check-input"
+                                checked>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="payment-option border rounded-3 p-3 d-flex align-items-center gap-3" id="pay-card"
+                            onclick="selectPayment('card')">
+                            <i class="fas fa-credit-card text-success fa-2x"></i>
+                            <div>
+                                <div class="fw-semibold">Credit / Debit / ATM Card</div>
+                                <small class="text-muted">Visa, Mastercard, RuPay</small>
+                            </div>
+                            <input type="radio" name="payment_method" value="card" class="ms-auto form-check-input">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="payment-option border rounded-3 p-3 d-flex align-items-center gap-3"
+                            id="pay-netbanking" onclick="selectPayment('netbanking')">
+                            <i class="fas fa-university text-warning fa-2x"></i>
+                            <div>
+                                <div class="fw-semibold">Net Banking</div>
+                                <small class="text-muted">All major Indian banks supported</small>
+                            </div>
+                            <input type="radio" name="payment_method" value="netbanking"
+                                class="ms-auto form-check-input">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="payment-option border rounded-3 p-3 d-flex align-items-center gap-3" id="pay-cod"
+                            onclick="selectPayment('cod')">
+                            <i class="fas fa-money-bill-wave text-danger fa-2x"></i>
+                            <div>
+                                <div class="fw-semibold">Cash on Delivery</div>
+                                <small class="text-muted">Pay when your order is delivered</small>
+                            </div>
+                            <input type="radio" name="payment_method" value="cod" class="ms-auto form-check-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning mt-3 mb-0">
+                    <i class="fas fa-info-circle me-2"></i><strong>Demo project</strong> — no real payment is processed.
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: Summary & Confirm -->
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="step-number bg-primary text-white">4</span>
+                    <h6 class="fw-bold mb-0 text-uppercase text-primary">Order Summary</h6>
+                </div>
+                <ul class="list-group list-group-flush mb-3">
+                    {% for item in items %}
+                    <li class="list-group-item px-0 py-2">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" style="width:50px;height:50px;object-fit:contain;"
+                                alt="{{ item.product.name }}">
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">{{ item.product.name }}</div>
+                                <small class="text-muted">Qty: {{ item.quantity }}</small>
+                            </div>
+                            <div class="fw-bold text-success">₹{{ item.get_total_price }}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <button type="submit" class="btn btn-buy-now w-100 py-3 fw-bold fs-5">
+                    <i class="fas fa-bolt me-2"></i> PLACE ORDER — ₹{{ total_price }}
+                </button>
+                </form>
+                <a href="{% url 'cart_summary' %}" class="btn btn-outline-secondary w-100 mt-2 fw-semibold">← Back to
+                    Cart</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right: Price Breakdown -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+            <div class="card-header bg-white border-bottom fw-bold text-muted text-uppercase py-3">Price Details</div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Price ({{ items|length }} item{% if items|length > 1 %}s{% endif %})</span>
+                    <span>₹{{ total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>Delivery Charges</span>
+                    <span>FREE</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>Discount</span>
+                    <span>- ₹0</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total Amount</span>
+                    <span>₹{{ total_price }}</span>
+                </div>
+                <p class="text-success fw-semibold small mt-3 mb-0"><i class="fas fa-tag me-1"></i> You save ₹0 on this
+                    order!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPayment(type) {
+        document.querySelectorAll('.payment-option').forEach(el => {
+            el.classList.remove('selected');
+            el.querySelector('input[type=radio]').checked = false;
+        });
+        const selected = document.getElementById('pay-' + type);
+        selected.classList.add('selected');
+        selected.querySelector('input[type=radio]').checked = true;
+    }
+</script>
+{% endblock %}

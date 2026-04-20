@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Download Flipko App{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-md-6">
+            <h1 class="fw-bold display-5 mb-3">Shop smarter with the Flipko App</h1>
+            <p class="text-muted fs-5">Get the best deals, track orders, and enjoy a seamless shopping experience on
+                your phone.</p>
+            <ul class="list-unstyled mt-4">
+                <li class="mb-3 d-flex align-items-center gap-3"><i class="fas fa-bell text-primary fa-lg"></i>
+                    <span>Instant deal alerts & notifications</span></li>
+                <li class="mb-3 d-flex align-items-center gap-3"><i class="fas fa-shield-alt text-success fa-lg"></i>
+                    <span>Secure & fast checkout</span></li>
+                <li class="mb-3 d-flex align-items-center gap-3"><i class="fas fa-magic text-warning fa-lg"></i>
+                    <span>Exclusive app-only offers</span></li>
+                <li class="mb-3 d-flex align-items-center gap-3"><i class="fas fa-map-marker-alt text-danger fa-lg"></i>
+                    <span>Real-time order tracking</span></li>
+            </ul>
+            <div class="d-flex gap-3 mt-4 flex-wrap">
+                <a href="#" class="btn btn-dark fw-semibold px-4 py-2">
+                    <i class="fab fa-google-play me-2"></i>Google Play
+                </a>
+                <a href="#" class="btn btn-dark fw-semibold px-4 py-2">
+                    <i class="fab fa-apple me-2"></i>App Store
+                </a>
+            </div>
+            <div class="mt-4">
+                <p class="text-muted small mb-1">Or scan the QR code below from your phone:</p>
+                <div class="bg-light border rounded p-3 d-inline-block" style="cursor: pointer;"
+                    title="QR code placeholder">
+                    <i class="fas fa-qrcode" style="font-size: 5rem; color: #2874f0;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center d-none d-md-block">
+            <i class="fas fa-mobile-alt text-primary" style="font-size: 12rem; opacity: 0.1;"></i>
+        </div>
+    </div>
+</div>
+{% endblock %}

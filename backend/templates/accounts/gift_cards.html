@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Gift Cards — Flipko{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-2"><i class="fas fa-gift me-2 text-danger"></i>Gift Cards</h2>
+    <p class="text-muted mb-4">The perfect gift for everyone — on every occasion!</p>
+    <div class="row g-4">
+        {% for amount in gift_amounts %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card shadow-sm border-0 text-center p-4 rounded-4 h-100"
+                style="background: linear-gradient(135deg, #2874f0 0%, #1a5fd1 100%);">
+                <i class="fas fa-gift text-white fa-2x mb-2"></i>
+                <h4 class="text-white fw-bold mb-0">₹{{ amount }}</h4>
+                <p class="text-white-50 small mb-3">Flipko Gift Card</p>
+                <button class="btn btn-warning btn-sm fw-bold">Buy Now</button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card shadow-sm border-0 text-center p-5 rounded-4">
+                <i class="fas fa-gift text-muted fa-4x mb-3" style="opacity:0.3;"></i>
+                <h5 class="text-muted">Gift Cards Coming Soon!</h5>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
