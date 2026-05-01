@@ -16,11 +16,11 @@ pip install -r requirements.txt
 
 :: Start Backend
 echo Starting Django Backend on http://127.0.0.1:8080/
-start cmd /k "call venv\Scripts\activate.bat && cd backend && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 8080 --noreload"
+start cmd /k "call venv\Scripts\activate.bat && cd flipko\backend && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 8080"
 
 :: Start Frontend
 echo Starting React Frontend (Reaction)...
-cd frontend-reaction
+cd flipko\frontend-reaction
 if not exist node_modules (
     echo Installing npm dependencies...
     call npm install

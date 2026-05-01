@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Warm Light Mode Palette - Active when .dark class is NOT present */
+  html:not(.dark) body {
+    background-color: #fffdf5; /* Very light creamy white */
+    background-image: radial-gradient(at 0% 0%, #fff9e6 0, transparent 50%), 
+                      radial-gradient(at 50% 0%, #fffbeb 0, transparent 50%);
+    color: #431407; /* Deep warm brown for better contrast */
+  }
+  .dark body {
+    background-color: #020617;
+    color: #f8fafc;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white object-cover bg-opacity-70 backdrop-blur-lg border border-white border-opacity-20;
+  }
+}
+
+:root {
+  --glow-color: #00f0ff;
+  --glow-color-dark: #007a80;
+}
+
+.glow-button {
+  width: 100%;
+  padding: 0.875rem;
+  border: none;
+  background: linear-gradient(135deg, var(--glow-color), var(--glow-color-dark));
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 4px 15px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  margin-top: 0.5rem;
+  display: inline-block;
+  text-align: center;
+}
+
+.glow-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--glow-color);
+}
