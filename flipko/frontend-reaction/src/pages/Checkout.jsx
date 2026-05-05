@@ -408,7 +408,7 @@ const Checkout = () => {
                                 <div key={item.id} className="flex gap-4">
                                     <div className="w-16 h-16 bg-slate-50 dark:bg-dark-900 rounded-xl flex-shrink-0 flex items-center justify-center p-2 border border-slate-100 dark:border-slate-700 overflow-hidden">
                                         <img 
-                                            src={item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8000${item.product.image}`} 
+                                            src={item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8080${item.product.image}`} 
                                             alt={item.product.name} 
                                             className="w-full h-full object-contain dark:mix-blend-normal mix-blend-multiply"
                                         />

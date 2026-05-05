@@ -36,7 +36,7 @@ const AIChatbot = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/chatbot/chat/', {
+            const response = await axios.post('http://127.0.0.1:8080/api/chatbot/chat/', {
                 message: userMessage
             }, { withCredentials: true });
 

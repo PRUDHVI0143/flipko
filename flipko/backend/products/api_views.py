@@ -22,6 +22,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('-created_at')
     serializer_class = ProductSerializer
 
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [] # Publicly readable
+        else:
+            permission_classes = [IsAuthenticated] # Requires login for reviews, updates, etc.
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
         queryset = Product.objects.all().order_by('-created_at')
         category_slug = self.request.query_params.get('category', None)

@@ -103,7 +103,7 @@ const Wishlist = () => {
                             {wishlistItems.map((item) => {
                                 const product = item.product;
                                 const isLocal = product.image && !product.image.includes('://');
-                                const imageUrl = isLocal ? `http://127.0.0.1:8000${product.image}` : product.image;
+                                const imageUrl = isLocal ? `http://127.0.0.1:8080${product.image}` : product.image;
 
                                 return (
                                     <motion.div 

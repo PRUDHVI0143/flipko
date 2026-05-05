@@ -501,7 +501,7 @@ const CATEGORY_FALLBACKS = {
 // Extracted ProductCard Component for cleaner code
 const ProductCard = ({ product, navigate, dispatch, index, trending = false, isWishlisted, onToggleWishlist }) => {
     const isLocal = product.image && !product.image.includes('://');
-    const imageUrl = isLocal ? `http://127.0.0.1:8000${product.image}` : product.image;
+    const imageUrl = isLocal ? `http://127.0.0.1:8080${product.image}` : product.image;
     const fallbackUrl = CATEGORY_FALLBACKS[product.category?.slug] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80";
 
     const handleImgError = (e) => {

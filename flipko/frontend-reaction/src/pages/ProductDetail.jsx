@@ -73,8 +73,12 @@ const ProductDetail = () => {
         }
     };
 
-    const handleAddToCart = () => {
-        dispatch(addToCart({ productId: product.id, quantity }));
+    const handleAddToCart = async () => {
+        try {
+            await dispatch(addToCart({ productId: product.id, quantity })).unwrap();
+        } catch (error) {
+            console.error('Failed to add to cart:', error);
+        }
     };
 
     const handleReviewSubmit = async (e) => {
@@ -147,7 +151,7 @@ const ProductDetail = () => {
                             "stationery":     "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80",
                         };
                         const fallback = categoryFallbacks[product.category?.slug] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80";
-                        const imgSrc = product.image?.includes('://') ? product.image : (product.image ? `http://127.0.0.1:8000${product.image}` : fallback);
+                        const imgSrc = product.image?.includes('://') ? product.image : (product.image ? `http://127.0.0.1:8080${product.image}` : fallback);
                         return (
                             <motion.img 
                                 whileHover={{ scale: 1.05 }}
@@ -229,7 +233,7 @@ const ProductDetail = () => {
                                 Add to Bag
                             </button>
                             <button 
-                                onClick={() => { handleAddToCart(); navigate('/checkout'); }}
+                                onClick={async () => { await handleAddToCart(); navigate('/checkout'); }}
                                 className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-5 px-8 rounded-2xl shadow-xl shadow-orange-500/10 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 active:scale-95"
                             >
                                 Buy Now
@@ -367,7 +371,7 @@ const ProductDetail = () => {
                         >
                             <div className="aspect-square bg-slate-50 dark:bg-dark-900 rounded-xl mb-4 overflow-hidden p-4">
                                 <img 
-                                    src={item.image?.includes('://') ? item.image : `http://127.0.0.1:8000${item.image}`} 
+                                    src={item.image?.includes('://') ? item.image : `http://127.0.0.1:8080${item.image}`} 
                                     className="w-full h-full object-contain group-hover:scale-110 transition-transform dark:mix-blend-normal mix-blend-multiply" 
                                     alt={item.name}
                                     onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80"; }}

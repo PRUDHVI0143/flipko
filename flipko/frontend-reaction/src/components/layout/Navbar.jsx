@@ -161,7 +161,7 @@ const Navbar = () => {
                                     >
                                         <div className="w-10 h-10 bg-slate-50 rounded-lg flex-shrink-0 p-1 flex items-center justify-center">
                                             <img 
-                                                src={item.image.startsWith('http') ? item.image : `http://127.0.0.1:8000${item.image}`} 
+                                                src={item.image.startsWith('http') ? item.image : `http://127.0.0.1:8080${item.image}`} 
                                                 className="w-full h-full object-contain"
                                                 alt={item.name}
                                             />

@@ -74,7 +74,7 @@ const CartPage = () => {
                     <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-200/20 dark:to-dark-900/50"></div>
                     {item.product.image ? (
                        <img 
-                        src={item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8000${item.product.image}`} 
+                        src={item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8080${item.product.image}`} 
                         alt={item.product.name} 
                         className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110 dark:mix-blend-normal mix-blend-multiply" 
                        />
