@@ -9,5 +9,4 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Populate database with products and guest user
-python scripts/recover_products.py
-python scripts/create_guest.py
+python manage.py populate_db
