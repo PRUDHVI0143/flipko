@@ -6,175 +6,185 @@ import decimal
 import random
 
 class Command(BaseCommand):
-    help = 'Populates the database with 150 products and creates a guest user'
+    help = 'Populates the database with 150 products using reliable Unsplash images'
 
     def handle(self, *args, **options):
-        M_BASE = "https://m.media-amazon.com/images/I/"
+        BASE = "https://images.unsplash.com/photo-"
+        PARAMS = "?w=800&q=80&fit=crop&auto=format"
         
-        IMAGE_DB = {
-            # Mobiles
-            "Apple iPhone 15 Pro":       "https://www.apple.com/v/iphone-15-pro/c/images/overview/incentive/iphone_15_pro__fba5ot874p6u_large.jpg",
-            "Samsung Galaxy S24 Ultra":  M_BASE + "71RVuBy6q4L._SL1500_.jpg",
-            "Google Pixel 8 Pro":        M_BASE + "71Rre6P1GEL._SL1500_.jpg",
-            "OnePlus 12":                M_BASE + "71A9W-9wEGL._SL1500_.jpg",
-            "Realme 12 Pro+":            M_BASE + "71pka-8S+TL._SL1500_.jpg",
-            "Xiaomi 14":                 M_BASE + "51p1Z1Gq2UL._SL1500_.jpg",
-            "Motorola Edge 40":          M_BASE + "61Nl8q9L6CL._SL1500_.jpg",
-            "Vivo V30 Pro":              M_BASE + "61iVfK5p2WL._SL1500_.jpg",
-            "Nothing Phone (2)":         M_BASE + "718NIdbES8L._SL1500_.jpg",
-            "Poco X6 Pro":               M_BASE + "51fPr-vU07L._SL1500_.jpg",
-            "Lava Agni 2":               M_BASE + "51p2W3rVz5L._SL1500_.jpg",
-            "Infinix Note 30":           M_BASE + "41t-v7iO71L.jpg",
-            "iQOO 12":                   M_BASE + "6186O8-vGSL._SL1500_.jpg",
-            "Honor 90":                  M_BASE + "71fVf5O0UFL._SL1500_.jpg",
-            "OPPO Reno 11":              M_BASE + "71fVf5O0UFL._SL1500_.jpg",
-            # Electronics
-            "Apple MacBook Air M2":      "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/macbook-air-midnight-select-20220606?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1653084303665",
-            "Sony WH-1000XM5":           M_BASE + "51skS6iAtxL._SL1500_.jpg",
-            "Dell XPS 13":               M_BASE + "71p-9Hk7nAL._SL1500_.jpg",
-            "iPad Air 5th Gen":          "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/ipad-air-select-wifi-purple-202203?wid=940&hei=1112&fmt=png-alpha&.v=1645066742664",
-            "JBL Boombox 3":             M_BASE + "71q-v7lO71L._SL1500_.jpg",
-            "Sony Alpha 7 IV":           M_BASE + "71T-v7lO71L._SL1500_.jpg",
-            "Logitech MX Master 3S":     M_BASE + "61ni3t1ryQL._SL1500_.jpg",
-            "Samsung 27 inch Curved Monitor": M_BASE + "81m-v7lO71L._SL1500_.jpg",
-            "Kindle Paperwhite":         M_BASE + "61T9X8rLpGL._SL1500_.jpg",
-            "GoPro Hero 12":             M_BASE + "61z9P6X6zUL._SL1500_.jpg",
-            "Bose QuietComfort Ultra":   M_BASE + "51P-v7lO71L._SL1500_.jpg",
-            "Canon EOS R6 Mark II":      M_BASE + "71v-v7lO71L._SL1500_.jpg",
-            "Razer DeathAdder V3":       M_BASE + "61T-v1lO71L._SL1500_.jpg",
-            "Marshall Emberton II":      M_BASE + "71Y-v1lO71L._SL1500_.jpg",
-            "Western Digital 2TB SSD":   M_BASE + "51f-v1lO71L._SL1500_.jpg",
-            # Fashion
-            "Levi's Men's 511 Slim Jeans":      M_BASE + "81shQ-EKL1L._UL1500_.jpg",
-            "Nike Air Jordan 1":                M_BASE + "71v9T7nL4XL._UL1500_.jpg",
-            "Ray-Ban Aviator Classic":          M_BASE + "61I07yC6WKL._AC_SL1500_.jpg",
-            "U.S. Polo Assn. T-Shirt":          M_BASE + "81T-v7lO71L._UL1500_.jpg",
-            "Biba Women's Embroidered Kurta":   M_BASE + "91f-v7lO71L._UL1500_.jpg",
-            "Adidas Originals Superstar":       M_BASE + "71Xm+T7O+cL._UL1500_.jpg",
-            "Casio G-Shock Military":           M_BASE + "71G-v1lO71L._SL1500_.jpg",
-            "Fossil Gen 6 Smartwatch":          M_BASE + "71F-v1lO71L._SL1500_.jpg",
-            "Tommy Hilfiger Casual Belt":       M_BASE + "71B-v1lO71L._UL1500_.jpg",
-            "Puma Running Shoes":               M_BASE + "71P-v1lO71L._UL1500_.jpg",
-            "ZARA Linen Shrit":                 M_BASE + "71Z-v1lO71L._UL1500_.jpg",
-            "H&M Oversized Hoodie":             M_BASE + "71H-v1lO71L._UL1500_.jpg",
-            "Skechers GoWalk":                  M_BASE + "71S-v1lO71L._UL1500_.jpg",
-            "Vans Old Skool":                   M_BASE + "71V-v1lO71L._UL1500_.jpg",
-            "Daniel Wellington Rose Gold Watch": M_BASE + "71D-v1lO71L._SL1500_.jpg",
-            # Home & Kitchen
-            "Philips Air Fryer XL":             M_BASE + "61T-vq0O7DL._SL1500_.jpg",
-            "Prestige Induction Cooktop":       M_BASE + "61q-v7lO71L._SL1500_.jpg",
-            "Pigeon Non-Stick Cookware Set":    M_BASE + "71p-v7lO71L._SL1500_.jpg",
-            "Bajaj Majesty Mixer Grinder":      M_BASE + "61b-v7lO71L._SL1500_.jpg",
-            "Kent Grand+ Water Purifier":       M_BASE + "61k-v7lO71L._SL1500_.jpg",
-            "LG 242L Double Door Fridge":       M_BASE + "71l-v7lO71L._SL1500_.jpg",
-            "Dyson V15 Detect Vacuum":          "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leaf-page-v2/cleaners/v15-detect/hero/Dyson-V15-Detect-Hero-Mobile.png",
-            "Samsung 7kg Front Load Washer":    M_BASE + "71w-v7lO71L._SL1500_.jpg",
-            "Sleepyhead Orthopedic Mattress":   M_BASE + "71m-v7lO71L._SL1500_.jpg",
-            "Elica 60cm Filterless Chimney":    M_BASE + "61c-v7lO71L._SL1500_.jpg",
-            "Eureka Forbes Vac":                M_BASE + "51v-v7lO71L._SL1500_.jpg",
-            "Milton Thermosteel Bottle":        M_BASE + "51m-v7lO71L._SL1500_.jpg",
-            "Morphy Richards OTG 24L":          M_BASE + "61m-v7lO71L._SL1500_.jpg",
-            "Usha Swift Ceiling Fan":           M_BASE + "51f-v7lO71L._SL1500_.jpg",
-            "Crompton Ozone Air Cooler":        M_BASE + "71a-v7lO71L._SL1500_.jpg",
-            # Grocery
-            "Aashirvaad Atta 5kg":             M_BASE + "71A-v7lO71L._SL1500_.jpg",
-            "Fortune Refined Oil 1L":          M_BASE + "71O-v7lO71L._SL1500_.jpg",
-            "TATA Salt 1kg":                   M_BASE + "61S-v7lO71L._SL1500_.jpg",
-            "Maggi Masala Noodles 12-Pack":    M_BASE + "71M-v7lO71L._SL1500_.jpg",
-            "Nescafe Classic Coffee 100g":     M_BASE + "71C-v7lO71L._SL1500_.jpg",
-            "Amul Pure Ghee 1L":               M_BASE + "71G-v7lO71L._SL1500_.jpg",
-            "Kellogg's Corn Flakes 1kg":       M_BASE + "71K-v7lO71L._SL1500_.jpg",
-            "Red Label Tea 500g":              M_BASE + "71T-v1lO71L._SL1500_.jpg",
-            "Dabur Honey 500g":                M_BASE + "71D-v1lO71L._SL1500_.jpg",
-            "Saffola Gold Oil 5L":             M_BASE + "71S-v1lO71L._SL1500_.jpg",
-            "Daawat Basmati Rice 5kg":         M_BASE + "71R-v1lO71L._SL1500_.jpg",
-            "Horlicks 500g":                   M_BASE + "71H-v1lO71L._SL1500_.jpg",
-            "Nutrichoice Biscuits":            M_BASE + "71N-v1lO71L._SL1500_.jpg",
-            "Cadbury Celebration Box":         M_BASE + "71B-v1lO71L._SL1500_.jpg",
-            "Pampers Baby Wipes":              M_BASE + "71P-v1lO71L._SL1500_.jpg",
-            # Books
-            "Atomic Habits - James Clear":     M_BASE + "81bgE7F74ML._SL1500_.jpg",
-            "The Psychology of Money":         M_BASE + "71g2ednj0JL._SL1500_.jpg",
-            "Spiderman: Across The Spiderverse Art": M_BASE + "71it8r+V-AL._AC_SL1500_.jpg",
-            "Naruto Vol. 1":                   "https://m.media-amazon.com/images/I/912x9psZByL.jpg",
-            "One Piece Vol. 100":              M_BASE + "91m9Vq96-ZL._SL1500_.jpg",
-            "Harry Potter Box Set":            M_BASE + "71Vj6D6S3NL._SL1500_.jpg",
-            "The Alchemist":                   M_BASE + "71a-v1lO71L._SL1500_.jpg",
-            "Deep Work - Cal Newport":         M_BASE + "71D-v1lO71L._SL1500_.jpg",
-            "Sapiens: A Brief History":        M_BASE + "71S-v1lO71L._SL1500_.jpg",
-            "Rich Dad Poor Dad":               M_BASE + "71R-v1lO71L._SL1500_.jpg",
-            "It Ends With Us":                 M_BASE + "71I-v1lO71L._SL1500_.jpg",
-            "Verity - Colleen Hoover":         M_BASE + "71V-v1lO71L._SL1500_.jpg",
-            "Ikigai":                          M_BASE + "71I-v2lO71L._SL1500_.jpg",
-            "Man's Search for Meaning":        M_BASE + "71M-v1lO71L._SL1500_.jpg",
-            "Thinking Fast and Slow":          M_BASE + "71T-v1lO71L._SL1500_.jpg",
-            # Beauty
-            "Nivea Men Body Wash":             M_BASE + "51v-v7lO71L._SL1500_.jpg",
-            "L'Oreal Paris Hair Serum":        M_BASE + "61s-v7lO71L._SL1500_.jpg",
-            "Lakme Absolute 3D Lipstick":      M_BASE + "61l-v7lO71L._SL1500_.jpg",
-            "Maybelline Fit Me Foundation":    M_BASE + "61f-v7lO71L._SL1500_.jpg",
-            "Philips Cordless Trimmer":        M_BASE + "61t-v7lO71L._SL1500_.jpg",
-            "Forest Essentials Facial Cleanser": M_BASE + "61F-v1lO71L._SL1500_.jpg",
-            "Mamaearth Vitamin C Serum":       M_BASE + "61M-v1lO71L._SL1500_.jpg",
-            "The Body Shop Tea Tree Oil":      M_BASE + "51T-v1lO71L._SL1500_.jpg",
-            "Biotique Bio Kelp Shampoo":       M_BASE + "61B-v1lO71L._SL1500_.jpg",
-            "Cetaphil Gentle Skin Cleanser":   M_BASE + "61C-v1lO71L._SL1500_.jpg",
-            "Neutrogena Sunscreen SPF 50":     M_BASE + "61N-v1lO71L._SL1500_.jpg",
-            "Old Spice Aftershave":            M_BASE + "61O-v1lO71L._SL1500_.jpg",
-            "Gillette Mach3 Blades":           M_BASE + "61G-v1lO71L._SL1500_.jpg",
-            "Dove Repair Shampoo":             M_BASE + "61D-v1lO71L._SL1500_.jpg",
-            "Tresemme Hair Spray":             M_BASE + "61T-v1lO71L._SL1500_.jpg",
-            # Toys
-            "LEGO Classic Bricks Set":         M_BASE + "91M2vN+8O9L._SL1500_.jpg",
-            "Barbie Dreamhouse 2024":          M_BASE + "81fH+0y8uSL._SL1500_.jpg",
-            "Hot Wheels 20 Car Pack":          M_BASE + "91H-v1lO71L._SL1500_.jpg",
-            "Monopoly Deluxe Board Game":      M_BASE + "81M-v1lO71L._SL1500_.jpg",
-            "Hasbro Jenga Classic":            M_BASE + "71J-v1lO71L._SL1500_.jpg",
-            "Fisher-Price Baby Gym":           M_BASE + "81F-v1lO71L._SL1500_.jpg",
-            "Nerf Elite 2.0 Commander":        M_BASE + "71N-v1lO71L._SL1500_.jpg",
-            "Rubik's Cube 3x3":                M_BASE + "71l-9+8E6jL._SL1500_.jpg",
-            "Funskool Chess Set":              M_BASE + "71C-v1lO71L._SL1500_.jpg",
-            "Remote Control Rock Crawler":     M_BASE + "71R-v1lO71L._SL1500_.jpg",
-            "Ludo King Board":                 M_BASE + "71L-v1lO71L._SL1500_.jpg",
-            "Doctor Pretend Play Kit":         M_BASE + "71D-v2lO71L._SL1500_.jpg",
-            "Soft Teddy Bear 30cm":            M_BASE + "71S-v1lO71L._SL1500_.jpg",
-            "Kitchen Set for Kids":            M_BASE + "71K-v1lO71L._SL1500_.jpg",
-            "Pokemon Trading Cards Box":       M_BASE + "71P-v1lO71L._SL1500_.jpg",
-            # Sports
-            "Yonex Nanoray 18i Racket":        M_BASE + "61Y-v7lO71L._SL1500_.jpg",
-            "Quechua Arpenaz Backpack":        M_BASE + "71Q-v7lO71L._SL1500_.jpg",
-            "Cosco Cricket Tennis Ball":       M_BASE + "61c-v7lO71L._SL1500_.jpg",
-            "Decathlon Yoga Mat":              M_BASE + "71y-v7lO71L._SL1500_.jpg",
-            "Adidas Starlancer Football":      M_BASE + "71a-v7lO71L._SL1500_.jpg",
-            "Nivea Skipping Rope":             M_BASE + "51n-v7lO71L._SL1500_.jpg",
-            "Vector X Table Tennis Bat":       M_BASE + "61v-v7lO71L._SL1500_.jpg",
-            "Cycling Helmet Pro":              M_BASE + "61h-v7lO71L._SL1500_.jpg",
-            "Gym Duffel Bag 30L":              M_BASE + "61g-v7lO71L._SL1500_.jpg",
-            "Electric Air Pump":               M_BASE + "51e-v7lO71L._SL1500_.jpg",
-            "Dumbbell Set 5kg x 2":            M_BASE + "61d-v7lO71L._SL1500_.jpg",
-            "Resistance Bands Set":            M_BASE + "61r-v7lO71L._SL1500_.jpg",
-            "Skating Board":                   M_BASE + "61s-v1lO71L._SL1500_.jpg",
-            "Badminton Shuttlecocks Gold":     M_BASE + "61b-v1lO71L._SL1500_.jpg",
-            "Trekking Poles Pair":             M_BASE + "61t-v1lO71L._SL1500_.jpg",
-            # Stationery
-            "Parker Vector Ball Pen":          M_BASE + "61P-v7lO71L._SL1500_.jpg",
-            "Casio Scientific Calculator":     M_BASE + "61C-v7lO71L._SL1500_.jpg",
-            "Camel Artist Water Colors":       M_BASE + "71c-v7lO71L._SL1500_.jpg",
-            "Moleskine Classic Notebook":      M_BASE + "61m-v7lO71L._SL1500_.jpg",
-            "Staedtler Pigment Liner Set":     M_BASE + "71s-v7lO71L._SL1500_.jpg",
-            "Faber-Castell 24 Color Pencils":  M_BASE + "71f-v7lO71L._SL1500_.jpg",
-            "Staples Highlighters Pack":       M_BASE + "61S-v1lO71L._SL1500_.jpg",
-            "Post-it Sticky Notes":            M_BASE + "61p-v1lO71L._SL1500_.jpg",
-            "White Board Marker 4-Color":      M_BASE + "61w-v1lO71L._SL1500_.jpg",
-            "Scissors & Tape Dispenser":       M_BASE + "61s-v1lO71L._SL1500_.jpg",
-            "Expanding File Folder":           M_BASE + "71e-v1lO71L._SL1500_.jpg",
-            "Correction Tape Pen":             M_BASE + "61c-v1lO71L._SL1500_.jpg",
-            "Pencil Case Mesh":                M_BASE + "61p-v2lO71L._SL1500_.jpg",
-            "A4 Printing Paper 500 Sheets":    M_BASE + "61a-v1lO71L._SL1500_.jpg",
-            "Sketchbook 120GSM":               M_BASE + "71s-v2lO71L._SL1500_.jpg",
+        # Manually curated Unsplash mapping for all 150 products
+        PHOTO_DB = {
+            # MOBILES
+            "Apple iPhone 15 Pro":        "1695048133142-1a20484d2569",
+            "Samsung Galaxy S24 Ultra":   "1706438374822-d41cbbc0e5e0",
+            "Google Pixel 8 Pro":         "1610945415295-d9bbf067e59c",
+            "OnePlus 12":                 "1598327105666-5b89351aff97",
+            "Realme 12 Pro+":             "1574944985070-8f3ebc6b79d2",
+            "Xiaomi 14":                  "1592899678770-b3e7cfa5d3b8",
+            "Motorola Edge 40":           "1510557880182-3d4d3cba35a5",
+            "Vivo V30 Pro":               "1609252923843-08c5e22e7e7c",
+            "Nothing Phone (2)":          "1659118132698-c3f55a7f6b29",
+            "Poco X6 Pro":                "1619683289697-81b10cc8bf54",
+            "Lava Agni 2":                "1511707171634-5f897ff02aa9",
+            "Infinix Note 30":            "1574944985070-1f3ebc6b79d2",
+            "iQOO 12":                    "1592750475338-74b7b21085ab",
+            "Honor 90":                   "1570710891163-2b1bbba52c32",
+            "OPPO Reno 11":               "1574944985070-8f3ebc6b79d2",
+            # ELECTRONICS
+            "Apple MacBook Air M2":       "1517336714731-489689fd1ca8",
+            "Sony WH-1000XM5":            "1583394838336-acd977736f90",
+            "Dell XPS 13":                "1593642632559-0c6d3fc62b89",
+            "iPad Air 5th Gen":           "1544244015-0df4b3ffc6b0",
+            "JBL Boombox 3":              "1608043152269-423dbba4e7e1",
+            "Sony Alpha 7 IV":            "1516035069371-29a1b244cc32",
+            "Logitech MX Master 3S":      "1527864550417-7fd91fc51a46",
+            "Samsung 27 inch Curved Monitor": "1593640408182-31c70c8268f5",
+            "Kindle Paperwhite":          "1541963463532-d68292c34b19",
+            "GoPro Hero 12":              "1507582020474-9a35b7d455d9",
+            "Bose QuietComfort Ultra":    "1505740420928-5e560c06d30e",
+            "Canon EOS R6 Mark II":       "1502920514313-52581002a659",
+            "Razer DeathAdder V3":        "1527814050087-3793815479db",
+            "Marshall Emberton II":       "1608043152269-423dbba4e7e1",
+            "Western Digital 2TB SSD":    "1558618666-fcd25c85cd64",
+            # FASHION
+            "Levi's Men's 511 Slim Jeans": "1542272604-787c3835535d",
+            "Nike Air Jordan 1":          "1542291026-7eec264c27ff",
+            "Ray-Ban Aviator Classic":    "1572635196237-14b3f281503f",
+            "U.S. Polo Assn. T-Shirt":    "1523381210434-271e8be1f52b",
+            "Biba Women's Embroidered Kurta": "1585487000160-6ebcfceb0d03",
+            "Adidas Originals Superstar":  "1608231387042-66d1773d3028",
+            "Casio G-Shock Military":     "1523170335258-f5ed11844a49",
+            "Fossil Gen 6 Smartwatch":    "1523275335684-37898b6baf30",
+            "Tommy Hilfiger Casual Belt": "1548036328-c9fa89d128fa",
+            "Puma Running Shoes":         "1539185069890-0088a700fe90",
+            "ZARA Linen Shrit":           "1434389677669-e08b4cac3105",
+            "H&M Oversized Hoodie":       "1556821840-3a63f95609a7",
+            "Skechers GoWalk":            "1600185365483-26d4a4fe0dac",
+            "Vans Old Skool":             "1525966222134-fcfa99b8ae77",
+            "Daniel Wellington Rose Gold Watch": "1524592094714-0f0654e20314",
+            # HOME & KITCHEN
+            "Philips Air Fryer XL":       "1585771724684-38269d6639fd",
+            "Prestige Induction Cooktop": "1556909114-f6e7ad7d3136",
+            "Pigeon Non-Stick Cookware Set": "1584947897558-4a6a76cfde8e",
+            "Bajaj Majesty Mixer Grinder": "1585771724684-38269d6639fd",
+            "Kent Grand+ Water Purifier": "1600585154340-be6161a56a0c",
+            "LG 242L Double Door Fridge": "1571175443880-49e1d25b2bc5",
+            "Dyson V15 Detect Vacuum":    "1558618666-fcd25c85cd64",
+            "Samsung 7kg Front Load Washer": "1626806787461-102c1a9a3b49",
+            "Sleepyhead Orthopedic Mattress": "1555041469-a586c61ea9bc",
+            "Elica 60cm Filterless Chimney": "1556909114-f6e7ad7d3136",
+            "Eureka Forbes Vac":          "1558618666-fcd25c85cd64",
+            "Milton Thermosteel Bottle":  "1602143407151-7111542de6e8",
+            "Morphy Richards OTG 24L":    "1585771724684-38269d6639fd",
+            "Usha Swift Ceiling Fan":     "1558618047-3c8c76ca7d13",
+            "Crompton Ozone Air Cooler":  "1585771724684-38269d6639fd",
+            # GROCERY
+            "Aashirvaad Atta 5kg":        "1574323347407-f5e1ad6d020b",
+            "Fortune Refined Oil 1L":     "1474979266404-7eaacbcd87c5",
+            "TATA Salt 1kg":              "1626197031507-c17099753214",
+            "Maggi Masala Noodles 12-Pack": "1603133872878-684f208fb84b",
+            "Nescafe Classic Coffee 100g": "1514432324607-a09d9b4aefdd",
+            "Amul Pure Ghee 1L":          "1608686207856-001b95cf60ca",
+            "Kellogg's Corn Flakes 1kg":  "1559703248-dcaaec9fab78",
+            "Red Label Tea 500g":         "1544787219-7f47ccb76574",
+            "Dabur Honey 500g":           "1558642452-9d2a7deb7f62",
+            "Saffola Gold Oil 5L":        "1474979266404-7eaacbcd87c5",
+            "Daawat Basmati Rice 5kg":    "1536304993881-ff6e9eefa2a6",
+            "Horlicks 500g":              "1625805866449-8a5e30d45a24",
+            "Nutrichoice Biscuits":       "1568901346375-23c9450c58cd",
+            "Cadbury Celebration Box":    "1549007994-cb92caebd54b",
+            "Pampers Baby Wipes":         "1612817288484-6f916006741a",
+            # BOOKS
+            "Atomic Habits - James Clear": "1512820790803-83ca734da794",
+            "The Psychology of Money":    "1553729459-efe14ef6055d",
+            "Spiderman: Across The Spiderverse Art": "1607604276583-eef5d76b4e54",
+            "Naruto Vol. 1":              "1614680889096-e229c3a09de1",
+            "One Piece Vol. 100":         "1614680889096-e229c3a09de1",
+            "Harry Potter Box Set":       "1507842217343-583bb7270b66",
+            "The Alchemist":              "1512820790803-83ca734da794",
+            "Deep Work - Cal Newport":    "1544716278-ca5e3f4abd8c",
+            "Sapiens: A Brief History":   "1544716278-ca5e3f4abd8c",
+            "Rich Dad Poor Dad":          "1553729459-efe14ef6055d",
+            "It Ends With Us":            "1512820790803-83ca734da794",
+            "Verity - Colleen Hoover":    "1512820790803-83ca734da794",
+            "Ikigai":                     "1544716278-ca5e3f4abd8c",
+            "Man's Search for Meaning":   "1544716278-ca5e3f4abd8c",
+            "Thinking Fast and Slow":     "1553729459-efe14ef6055d",
+            # BEAUTY
+            "Nivea Men Body Wash":             "1619451683882-c9e28bce0c25",
+            "L'Oreal Paris Hair Serum":        "1596462502278-27bfdc403348",
+            "Lakme Absolute 3D Lipstick":      "1586495777744-4e6232bf2f74",
+            "Maybelline Fit Me Foundation":    "1512496015851-a90fb38ba796",
+            "Philips Cordless Trimmer":        "1621786030484-4c855eed6974",
+            "Forest Essentials Facial Cleanser": "1596462502278-27bfdc403348",
+            "Mamaearth Vitamin C Serum":       "1620916566398-39f1143ab7be",
+            "The Body Shop Tea Tree Oil":      "1556228453-efd6c1ff04f6",
+            "Biotique Bio Kelp Shampoo":       "1526758097130-bab247274f58",
+            "Cetaphil Gentle Skin Cleanser":   "1620916566398-39f1143ab7be",
+            "Neutrogena Sunscreen SPF 50":     "1556228720-195a672e8a03",
+            "Old Spice Aftershave":            "1619451683882-c9e28bce0c25",
+            "Gillette Mach3 Blades":           "1621786030484-4c855eed6974",
+            "Dove Repair Shampoo":             "1526758097130-bab247274f58",
+            "Tresemme Hair Spray":             "1526758097130-bab247274f58",
+            # TOYS
+            "LEGO Classic Bricks Set":         "1587654780291-39c9404d746b",
+            "Barbie Dreamhouse 2024":          "1596461404969-9ae70f2830c1",
+            "Hot Wheels 20 Car Pack":          "1566576912321-d58ddd7a6088",
+            "Monopoly Deluxe Board Game":      "1611996575749-79a3a250f948",
+            "Hasbro Jenga Classic":            "1611996575749-79a3a250f948",
+            "Fisher-Price Baby Gym":           "1516627145497-ae6968895b74",
+            "Nerf Elite 2.0 Commander":        "1566576912321-d58ddd7a6088",
+            "Rubik's Cube 3x3":                "1567359781514-3b964e2b04d6",
+            "Funskool Chess Set":              "1529699211952-f1e88fc94c6d",
+            "Remote Control Rock Crawler":     "1566576912321-d58ddd7a6088",
+            "Ludo King Board":                 "1611996575749-79a3a250f948",
+            "Doctor Pretend Play Kit":         "1516627145497-ae6968895b74",
+            "Soft Teddy Bear 30cm":            "1559454403-b8fb88521f11",
+            "Kitchen Set for Kids":            "1516627145497-ae6968895b74",
+            "Pokemon Trading Cards Box":       "1593118247619-e2d6f056869e",
+            # SPORTS
+            "Yonex Nanoray 18i Racket":        "1626224583764-f87db24ac4ea",
+            "Quechua Arpenaz Backpack":        "1553062407-98eeb64c6a62",
+            "Cosco Cricket Tennis Ball":       "1540747913346-19212a4b4e4e",
+            "Decathlon Yoga Mat":              "1544367567-0f2fcb009e0b",
+            "Adidas Starlancer Football":      "1551958219-acb4a41a6d7b",
+            "Nivea Skipping Rope":             "1434608519344-49d77a124b13",
+            "Vector X Table Tennis Bat":       "1626224583764-f87db24ac4ea",
+            "Cycling Helmet Pro":              "1571188654248-7a89213915f7",
+            "Gym Duffel Bag 30L":              "1553062407-98eeb64c6a62",
+            "Electric Air Pump":               "1558618666-fcd25c85cd64",
+            "Dumbbell Set 5kg x 2":            "1571902943202-507ec2618e8f",
+            "Resistance Bands Set":            "1571902943202-507ec2618e8f",
+            "Skating Board":                   "1520045892732-304bc3ac5d8e",
+            "Badminton Shuttlecocks Gold":     "1626224583764-f87db24ac4ea",
+            "Trekking Poles Pair":             "1551632811-561732d1e306",
+            # STATIONERY
+            "Parker Vector Ball Pen":          "1583485088034-697b5bc54ccd",
+            "Casio Scientific Calculator":     "1611532736597-de2d4265fba3",
+            "Camel Artist Water Colors":       "1513364776144-60967b0f800f",
+            "Moleskine Classic Notebook":      "1531346878377-a5be20888e57",
+            "Staedtler Pigment Liner Set":     "1583485088034-697b5bc54ccd",
+            "Faber-Castell 24 Color Pencils": "1513364776144-60967b0f800f",
+            "Staples Highlighters Pack":       "1583485088034-697b5bc54ccd",
+            "Post-it Sticky Notes":            "1586281380349-632531db7ed4",
+            "White Board Marker 4-Color":      "1583485088034-697b5bc54ccd",
+            "Scissors & Tape Dispenser":       "1583485088034-697b5bc54ccd",
+            "Expanding File Folder":           "1586281380349-632531db7ed4",
+            "Correction Tape Pen":             "1583485088034-697b5bc54ccd",
+            "Pencil Case Mesh":                "1531346878377-a5be20888e57",
+            "A4 Printing Paper 500 Sheets":    "1586281380349-632531db7ed4",
+            "Sketchbook 120GSM":               "1513364776144-60967b0f800f",
         }
 
-        cats = {
+        # Ensure Categories exist first
+        categories_list = ["MOBILES", "ELECTRONICS", "FASHION", "HOME & KITCHEN", "GROCERY", "BOOKS", "BEAUTY", "TOYS", "SPORTS", "STATIONERY"]
+        cat_map = {}
+        for cname in categories_list:
+            cat, _ = Category.objects.get_or_create(name=cname, slug=slugify(cname))
+            cat_map[cname] = cat
+
+        # Define products and their categories
+        product_cats = {
             "MOBILES": ["Apple iPhone 15 Pro", "Samsung Galaxy S24 Ultra", "Google Pixel 8 Pro", "OnePlus 12", "Realme 12 Pro+", "Xiaomi 14", "Motorola Edge 40", "Vivo V30 Pro", "Nothing Phone (2)", "Poco X6 Pro", "Lava Agni 2", "Infinix Note 30", "iQOO 12", "Honor 90", "OPPO Reno 11"],
             "ELECTRONICS": ["Apple MacBook Air M2", "Sony WH-1000XM5", "Dell XPS 13", "iPad Air 5th Gen", "JBL Boombox 3", "Sony Alpha 7 IV", "Logitech MX Master 3S", "Samsung 27 inch Curved Monitor", "Kindle Paperwhite", "GoPro Hero 12", "Bose QuietComfort Ultra", "Canon EOS R6 Mark II", "Razer DeathAdder V3", "Marshall Emberton II", "Western Digital 2TB SSD"],
             "FASHION": ["Levi's Men's 511 Slim Jeans", "Nike Air Jordan 1", "Ray-Ban Aviator Classic", "U.S. Polo Assn. T-Shirt", "Biba Women's Embroidered Kurta", "Adidas Originals Superstar", "Casio G-Shock Military", "Fossil Gen 6 Smartwatch", "Tommy Hilfiger Casual Belt", "Puma Running Shoes", "ZARA Linen Shrit", "H&M Oversized Hoodie", "Skechers GoWalk", "Vans Old Skool", "Daniel Wellington Rose Gold Watch"],
@@ -187,29 +197,32 @@ class Command(BaseCommand):
             "STATIONERY": ["Parker Vector Ball Pen", "Casio Scientific Calculator", "Camel Artist Water Colors", "Moleskine Classic Notebook", "Staedtler Pigment Liner Set", "Faber-Castell 24 Color Pencils", "Staples Highlighters Pack", "Post-it Sticky Notes", "White Board Marker 4-Color", "Scissors & Tape Dispenser", "Expanding File Folder", "Correction Tape Pen", "Pencil Case Mesh", "A4 Printing Paper 500 Sheets", "Sketchbook 120GSM"]
         }
 
-        created_count = 0
-        for cat_name, product_list in cats.items():
-            cat, _ = Category.objects.get_or_create(name=cat_name, slug=slugify(cat_name))
-            for name in product_list:
-                if name in IMAGE_DB:
-                    price = decimal.Decimal(random.randint(499, 15000)) + decimal.Decimal('0.99')
-                    stock = random.randint(10, 100)
-                    Product.objects.update_or_create(
-                        name=name,
-                        defaults={
-                            'category': cat,
-                            'description': f"Premium {name} with high-quality features.",
-                            'price': price,
-                            'stock': stock,
-                            'image': IMAGE_DB[name]
-                        }
-                    )
-                    created_count += 1
-        
+        updated_count = 0
+        for cname, plist in product_cats.items():
+            cat = cat_map[cname]
+            for pname in plist:
+                photo_id = PHOTO_DB.get(pname, "1523275335684-37898b6baf30")
+                img_url = f"{BASE}{photo_id}{PARAMS}"
+                
+                price = decimal.Decimal(random.randint(499, 15000)) + decimal.Decimal('0.99')
+                stock = random.randint(10, 100)
+                
+                Product.objects.update_or_create(
+                    name=pname,
+                    defaults={
+                        'category': cat,
+                        'description': f"Premium {pname} with high-quality features.",
+                        'price': price,
+                        'stock': stock,
+                        'image': img_url
+                    }
+                )
+                updated_count += 1
+
         # Create Guest User
         User = get_user_model()
         if not User.objects.filter(username='guest').exists():
             User.objects.create_user(username='guest', password='guestpassword123')
             self.stdout.write(self.style.SUCCESS('Successfully created guest user'))
 
-        self.stdout.write(self.style.SUCCESS(f'Successfully populated database with {created_count} products'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully updated/populated {updated_count} products with Unsplash images'))
