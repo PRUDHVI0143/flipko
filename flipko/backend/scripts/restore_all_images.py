@@ -13,8 +13,9 @@ django.setup()
 from products.models import Product
 
 def restore_images():
-    # Use the path relative to project root
-    mapping_path = os.path.join('resources', 'product_image_mapping.json')
+    # Use the path relative to script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    mapping_path = os.path.join(os.path.dirname(script_dir), 'resources', 'product_image_mapping.json')
     
     if not os.path.exists(mapping_path):
         print(f"Error: Mapping file not found at {mapping_path}")
