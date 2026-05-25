@@ -9,7 +9,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const response = await api.get('users/');
-        setUsers(response.data);
+        setUsers(Array.isArray(response.data) ? response.data : (response.data.results || response.data));
       } catch (err) {
         console.error('Failed to fetch users', err);
       } finally {

@@ -68,7 +68,8 @@ const ProductDetail = () => {
                 // Fetch related products (same category)
                 if (response.data.category?.slug) {
                     const relatedResponse = await api.get(`/products/?category=${response.data.category.slug}`);
-                    setRelatedProducts(relatedResponse.data.filter(p => p.id !== Number(id)));
+                    const relatedList = relatedResponse.data.results || relatedResponse.data;
+                    setRelatedProducts(Array.isArray(relatedList) ? relatedList.filter(p => p.id !== Number(id)) : []);
                 }
             } catch (error) {
                 console.error('Failed to fetch product', error);

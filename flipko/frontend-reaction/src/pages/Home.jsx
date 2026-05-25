@@ -156,7 +156,7 @@ const Home = () => {
         const fetchCategories = async () => {
             try {
                 const response = await api.get('/categories/');
-                setCategories(response.data);
+                setCategories(Array.isArray(response.data) ? response.data : (response.data.results || []));
             } catch (error) {
                 console.error('Failed to fetch categories', error);
             }
@@ -173,7 +173,7 @@ const Home = () => {
                 if (selectedCategory) params.category = selectedCategory;
                 
                 const response = await api.get('/products/', { params });
-                setProducts(response.data);
+                setProducts(response.data.results || response.data);
             } catch (error) {
                 console.error('Failed to fetch products', error);
             } finally {
