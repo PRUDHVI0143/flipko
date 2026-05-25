@@ -104,9 +104,11 @@ const ProductDetail = () => {
             if (isWishlisted) {
                 await api.delete(`/wishlist/${id}/`);
                 setIsWishlisted(false);
+                window.dispatchEvent(new CustomEvent('wishlistUpdate'));
             } else {
                 await api.post('/wishlist/', { product_id: id });
                 setIsWishlisted(true);
+                window.dispatchEvent(new CustomEvent('wishlistUpdate'));
             }
         } catch (error) {
             console.error('Failed to toggle wishlist', error);

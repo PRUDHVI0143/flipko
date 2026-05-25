@@ -13,7 +13,8 @@ const Account = () => {
     const navigate = useNavigate();
     const isLoggedIn = !!localStorage.getItem('access_token');
     const username = localStorage.getItem('username') || 'Guest';
-    const [userStats, setUserStats] = useState({ orders: 0, wishlist: 0 });
+        const [userStats, setUserStats] = useState({ orders: 0, wishlist: 0 });
+    const [wishlistItems, setWishlistItems] = useState([]);
     const [activeTab, setActiveTab] = useState('dashboard');
     
     // Toast notifications
@@ -94,11 +95,16 @@ const Account = () => {
         const fetchStats = async () => {
             try {
                 const wlRes = await api.get('/wishlist/');
+                const items = wlRes.data?.items || [];
+                setWishlistItems(items);
                 const ordersRes = await api.get('/orders/');
                 setUserStats({
-                    wishlist: wlRes.data?.items?.length || 0,
+                    wishlist: items.length,
                     orders: ordersRes.data?.length || 0
                 });
+                
+                // Sync Navbar count if necessary
+                window.dispatchEvent(new CustomEvent('wishlistUpdate', { detail: { count: items.length } }));
             } catch (error) {
                 console.error("Failed to fetch user stats", error);
             }
@@ -408,6 +414,50 @@ const Account = () => {
                                                 <span className="block text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-medium">{card.desc}</span>
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* Wish List Gallery Preview Widget */}
+                                    <div className="bg-slate-50 dark:bg-dark-900/40 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/60">
+                                        <div className="flex justify-between items-center mb-5">
+                                            <h4 className="font-bold text-slate-800 dark:text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                                <Heart className="w-4 h-4 text-rose-500 fill-rose-500/25" /> Your Wish List Preview
+                                            </h4>
+                                            <button 
+                                                onClick={() => navigate('/wishlist')}
+                                                className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-0.5"
+                                            >
+                                                View Full List <ChevronRight className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+
+                                        {wishlistItems.length === 0 ? (
+                                            <div className="py-6 text-center text-slate-400 dark:text-slate-500 font-bold text-xs">
+                                                No saved items found. Add items to your wish list to track them here!
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                                {wishlistItems.slice(0, 4).map((item) => {
+                                                    const product = item.product;
+                                                    const isLocal = product.image && !product.image.includes('://');
+                                                    const imageUrl = isLocal ? `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}` : product.image;
+                                                    return (
+                                                        <div 
+                                                            key={item.id}
+                                                            onClick={() => navigate(`/product/${product.id}`)}
+                                                            className="bg-white dark:bg-dark-900 border border-slate-100 dark:border-slate-800/65 rounded-2xl p-3 cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between"
+                                                        >
+                                                            <div className="w-full aspect-square flex items-center justify-center p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl overflow-hidden mb-2 shrink-0">
+                                                                <img src={imageUrl} alt={product.name} className="object-contain w-full h-full mix-blend-multiply dark:mix-blend-normal" />
+                                                            </div>
+                                                            <div className="text-center w-full">
+                                                                <p className="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 truncate">{product.name}</p>
+                                                                <p className="text-[10px] font-black text-rose-500 dark:text-rose-400 mt-0.5">₹{Number(product.price).toLocaleString('en-IN')}</p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Loyalty Perks Banner */}

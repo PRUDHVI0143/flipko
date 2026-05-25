@@ -44,6 +44,37 @@ const Navbar = () => {
     const [displayName, setDisplayName] = useState('Guest');
     const [avatarGradient, setAvatarGradient] = useState('from-slate-600 to-slate-700');
     const [tier, setTier] = useState('VIP Member');
+    const [wishlistCount, setWishlistCount] = useState(0);
+
+    useEffect(() => {
+        const fetchWishlistCount = async () => {
+            if (isLoggedIn) {
+                try {
+                    const res = await api.get('/wishlist/');
+                    setWishlistCount(res.data?.items?.length || 0);
+                } catch (error) {
+                    console.error('Failed to fetch wishlist count', error);
+                }
+            } else {
+                setWishlistCount(0);
+            }
+        };
+
+        fetchWishlistCount();
+
+        const handleWishlistUpdate = (e) => {
+            if (e.detail?.count !== undefined) {
+                setWishlistCount(e.detail.count);
+            } else {
+                fetchWishlistCount();
+            }
+        };
+
+        window.addEventListener('wishlistUpdate', handleWishlistUpdate);
+        return () => {
+            window.removeEventListener('wishlistUpdate', handleWishlistUpdate);
+        };
+    }, [isLoggedIn]);
 
     useEffect(() => {
         const updateName = () => {
@@ -305,18 +336,18 @@ const Navbar = () => {
                                                         <h4 className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 pb-1 border-b border-slate-50 dark:border-slate-800/60">Your Lists</h4>
                                                         <ul className="text-[11px] space-y-2.5 text-slate-600 dark:text-slate-400 font-bold">
                                                             <li 
-                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
+                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center justify-between gap-2 transition-all hover:translate-x-0.5" 
                                                                 onClick={() => navigate('/wishlist')}
                                                             >
-                                                                <Heart className="w-3.5 h-3.5 text-rose-500" />
-                                                                <span>Wish List</span>
-                                                            </li>
-                                                            <li 
-                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
-                                                                onClick={() => navigate('/wishlist')}
-                                                            >
-                                                                <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                                                                <span>Favorites</span>
+                                                                <div className="flex items-center gap-2">
+                                                                    <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
+                                                                    <span>Wish List</span>
+                                                                </div>
+                                                                {wishlistCount > 0 && (
+                                                                    <span className="bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 text-[10px] px-1.5 py-0.5 rounded-full font-black">
+                                                                        {wishlistCount}
+                                                                    </span>
+                                                                )}
                                                             </li>
                                                         </ul>
                                                     </div>

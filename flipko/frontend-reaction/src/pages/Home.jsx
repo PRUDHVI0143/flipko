@@ -207,12 +207,16 @@ const Home = () => {
         try {
             if (wishlist.includes(productId)) {
                 await api.delete(`/wishlist/${productId}/`);
-                setWishlist(prev => prev.filter(id => id !== productId));
+                const updated = wishlist.filter(id => id !== productId);
+                setWishlist(updated);
                 showToast('Removed from your wishlist.');
+                window.dispatchEvent(new CustomEvent('wishlistUpdate', { detail: { count: updated.length } }));
             } else {
                 await api.post('/wishlist/', { product_id: productId });
-                setWishlist(prev => [...prev, productId]);
+                const updated = [...wishlist, productId];
+                setWishlist(updated);
                 showToast('Added to your wishlist!');
+                window.dispatchEvent(new CustomEvent('wishlistUpdate', { detail: { count: updated.length } }));
             }
         } catch (error) {
             console.error('Failed to toggle wishlist', error);
