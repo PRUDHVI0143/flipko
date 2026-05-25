@@ -471,6 +471,29 @@ const Home = () => {
                 </section>
             )}
 
+            {/* Promo Ticker Strip - Animated marquee bar */}
+            {!searchQuery && !selectedCategory && (
+                <div className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 text-white py-2.5 overflow-hidden relative">
+                    <div className="flex items-center animate-marquee whitespace-nowrap gap-0">
+                        {[
+                            '🔥 Flash Sale: Up to 40% OFF on Electronics',
+                            '🚚 Free Shipping on orders over ₹499',
+                            '⚡ Limited Drops — Grab before stock runs out',
+                            '🎁 New Arrivals: Premium Mobiles & Gadgets',
+                            '💎 Exclusive Members-Only Prices — Sign in now',
+                            '🏆 Top Rated Products: 4.8★ and above',
+                            '🔥 Flash Sale: Up to 40% OFF on Electronics',
+                            '🚚 Free Shipping on orders over ₹499',
+                            '⚡ Limited Drops — Grab before stock runs out',
+                        ].map((msg, i) => (
+                            <span key={i} className="inline-flex items-center gap-2 text-xs font-bold tracking-wider px-8 border-r border-white/20">
+                                {msg}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Split Flash Sale and Products Slider Container */}
             {!searchQuery && !selectedCategory && (
                 <div className="max-w-7xl mx-auto px-6 sm:px-10 mt-28 lg:mt-24">
@@ -595,6 +618,131 @@ const Home = () => {
 
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Deals of the Day — 3-Column Ad Banners */}
+            {!searchQuery && !selectedCategory && (
+                <div className="max-w-7xl mx-auto px-6 sm:px-10 mt-8">
+                    <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center gap-2.5">
+                            <div className="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-xl text-amber-600 dark:text-amber-400">
+                                <Zap className="w-5 h-5 fill-current" />
+                            </div>
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Deals of the Day</h2>
+                        </div>
+                        <button 
+                            onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                        >
+                            All Deals <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {/* Ad Card 1 — Electronics */}
+                        <motion.div
+                            whileHover={{ y: -4, scale: 1.01 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => updateCategory('electronics')}
+                            className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
+                        >
+                            <img 
+                                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800" 
+                                alt="Electronics Deals" 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent"></div>
+                            <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                                <span className="text-[9px] font-black text-indigo-300 uppercase tracking-widest mb-1">Up to 35% OFF</span>
+                                <h3 className="text-xl font-black text-white leading-tight mb-2">Premium Electronics</h3>
+                                <div className="flex items-center gap-1.5 text-white/80 text-xs font-bold group-hover:text-white transition-colors">
+                                    <span>Shop Now</span>
+                                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                            <div className="absolute top-4 right-4 bg-rose-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                                Hot Deal
+                            </div>
+                        </motion.div>
+
+                        {/* Ad Card 2 — Fashion */}
+                        <motion.div
+                            whileHover={{ y: -4, scale: 1.01 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => updateCategory('fashion')}
+                            className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
+                        >
+                            <img 
+                                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800" 
+                                alt="Fashion Deals" 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-rose-950/90 via-rose-900/30 to-transparent"></div>
+                            <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                                <span className="text-[9px] font-black text-rose-300 uppercase tracking-widest mb-1">New Season Styles</span>
+                                <h3 className="text-xl font-black text-white leading-tight mb-2">Designer Fashion</h3>
+                                <div className="flex items-center gap-1.5 text-white/80 text-xs font-bold group-hover:text-white transition-colors">
+                                    <span>Explore Styles</span>
+                                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                            <div className="absolute top-4 right-4 bg-amber-400 text-slate-900 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                                New In
+                            </div>
+                        </motion.div>
+
+                        {/* Ad Card 3 — Home & Kitchen */}
+                        <motion.div
+                            whileHover={{ y: -4, scale: 1.01 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => updateCategory('home-kitchen')}
+                            className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
+                        >
+                            <img 
+                                src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" 
+                                alt="Home & Kitchen" 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-amber-950/90 via-amber-900/30 to-transparent"></div>
+                            <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                                <span className="text-[9px] font-black text-amber-300 uppercase tracking-widest mb-1">Refresh Your Space</span>
+                                <h3 className="text-xl font-black text-white leading-tight mb-2">Home & Living</h3>
+                                <div className="flex items-center gap-1.5 text-white/80 text-xs font-bold group-hover:text-white transition-colors">
+                                    <span>Discover More</span>
+                                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                            <div className="absolute top-4 right-4 bg-emerald-500 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                                Top Picks
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Wide Promotional Banner */}
+                    <motion.div
+                        whileHover={{ scale: 1.005 }}
+                        transition={{ duration: 0.2 }}
+                        onClick={() => navigate('/signup')}
+                        className="mt-5 relative rounded-[2rem] overflow-hidden cursor-pointer group h-32 sm:h-40"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-700"></div>
+                        <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.08) 0%, transparent 60%)'}}></div>
+                        <div className="absolute right-0 bottom-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+                        <div className="absolute left-1/4 top-0 w-40 h-40 bg-fuchsia-500/20 rounded-full blur-2xl"></div>
+                        <div className="relative z-10 h-full flex items-center justify-between px-8 sm:px-12">
+                            <div>
+                                <span className="text-[9px] font-black text-indigo-300 uppercase tracking-widest block mb-1">Members Exclusive</span>
+                                <h3 className="text-2xl sm:text-3xl font-black text-white leading-none tracking-tight mb-1">Join Flipko Today</h3>
+                                <p className="text-xs text-white/70 font-medium">Get 15% off your first order + early access to Flash Sales</p>
+                            </div>
+                            <div className="shrink-0">
+                                <div className="bg-white text-indigo-700 font-black text-sm px-6 py-3 rounded-2xl shadow-2xl group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300 flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4" />
+                                    Sign Up Free
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             )}
 
@@ -798,70 +946,103 @@ const Home = () => {
                 </div>
 
                 {/* Brand Trust Badges */}
-                <section className="bg-white/80 dark:bg-dark-900/50 backdrop-blur-md rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.01)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {[
-                        { icon: Truck, title: "Free Express Shipping", desc: "Guaranteed shipping on orders over ₹499" },
-                        { icon: ShieldCheck, title: "Secure Checkout", desc: "128-bit encryption banking security safeguard" },
-                        { icon: Headphones, title: "24/7 Helpline Support", desc: "Direct concierge service for order issues" },
-                        { icon: RotateCcw, title: "Hassle-Free Returns", desc: "Refund or replacement within 7 calendar days" }
-                    ].map((badge, index) => {
-                        const Icon = badge.icon;
-                        return (
-                            <div key={index} className="flex gap-4 items-start group">
-                                <div className="p-3 bg-slate-50 dark:bg-dark-950 rounded-2xl text-slate-800 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                                    <Icon className="w-6 h-6" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="font-extrabold text-sm text-slate-800 dark:text-white">{badge.title}</h4>
-                                    <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">{badge.desc}</p>
-                                </div>
-                            </div>
-                        );
-                    })}
+                <section className="relative overflow-hidden rounded-[2.5rem] border border-slate-100 dark:border-slate-800/80">
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/60 via-white to-purple-50/40 dark:from-indigo-950/20 dark:via-dark-900/50 dark:to-purple-950/20"></div>
+                    <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-slate-800/80">
+                        {[
+                            { icon: Truck, title: "Free Express Shipping", desc: "On orders over ₹499", color: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-50 dark:bg-indigo-950/30 group-hover:bg-indigo-600" },
+                            { icon: ShieldCheck, title: "Secure Checkout", desc: "Bank-grade 128-bit encryption", color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30 group-hover:bg-emerald-600" },
+                            { icon: Headphones, title: "24/7 Customer Support", desc: "Direct concierge for all issues", color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-950/30 group-hover:bg-violet-600" },
+                            { icon: RotateCcw, title: "Easy Returns", desc: "Refund within 7 calendar days", color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-950/30 group-hover:bg-amber-600" }
+                        ].map((badge, index) => {
+                            const Icon = badge.icon;
+                            return (
+                                <motion.div 
+                                    key={index} 
+                                    whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+                                    className="flex gap-4 items-center p-7 group cursor-default"
+                                >
+                                    <div className={`p-3.5 ${badge.bg} rounded-2xl ${badge.color} group-hover:text-white transition-all duration-300 shrink-0 shadow-sm`}>
+                                        <Icon className="w-6 h-6" />
+                                    </div>
+                                    <div className="space-y-0.5">
+                                        <h4 className="font-extrabold text-sm text-slate-800 dark:text-white">{badge.title}</h4>
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">{badge.desc}</p>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
                 </section>
 
                 {/* Modern Newsletter Section */}
-                <section className="bg-gradient-to-tr from-indigo-950 via-slate-900 to-indigo-950 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl">
-                    <div className="absolute right-0 bottom-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px]"></div>
-                    <div className="absolute left-1/4 top-1/4 w-40 h-40 bg-fuchsia-500/10 rounded-full blur-[70px]"></div>
+                <section className="rounded-[2.5rem] relative overflow-hidden shadow-2xl">
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-950"></div>
+                    <div className="absolute right-0 bottom-0 w-96 h-96 bg-indigo-500/15 rounded-full blur-[120px]"></div>
+                    <div className="absolute left-1/3 top-0 w-48 h-48 bg-fuchsia-500/10 rounded-full blur-[80px]"></div>
+                    <div className="absolute left-0 top-0 w-64 h-64 bg-violet-700/10 rounded-full blur-[100px]"></div>
                     
-                    <div className="max-w-2xl relative z-10 space-y-6">
-                        <span className="text-[10px] uppercase font-black tracking-widest text-indigo-400">Newsletter</span>
-                        <h3 className="text-3xl sm:text-4xl font-black tracking-tight leading-none">STAY TUNED WITH FLIPKO</h3>
-                        <p className="text-xs text-slate-400 dark:text-slate-400 max-w-md font-medium leading-relaxed">
-                            Subscribe to receive flash deal notifications, product drops alerts, and discount tokens.
-                        </p>
-                        
-                        {newsletterSubscribed ? (
-                            <motion.div 
-                                initial={{ scale: 0.95, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="bg-indigo-950/60 border border-indigo-500/30 p-4 rounded-2xl flex items-center gap-3 text-sm font-bold text-indigo-300 max-w-md"
-                            >
-                                <Check className="w-5 h-5 text-indigo-400" />
-                                <span>Thank you! Check your inbox for your 15% discount.</span>
-                            </motion.div>
-                        ) : (
-                            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
-                                <div className="relative flex-grow">
-                                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4.5 h-4.5 text-slate-500" />
-                                    <input 
-                                        type="email" 
-                                        required
-                                        value={newsletterEmail}
-                                        onChange={(e) => setNewsletterEmail(e.target.value)}
-                                        placeholder="Enter your email address"
-                                        className="w-full pl-11 pr-4 py-3.5 bg-slate-950/70 border border-slate-800 rounded-2xl text-xs outline-none focus:ring-2 focus:ring-indigo-500/30 font-medium"
-                                    />
+                    {/* Decorative dots pattern */}
+                    <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px'}}></div>
+
+                    <div className="relative z-10 p-10 sm:p-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-10">
+                        <div className="max-w-lg space-y-5">
+                            <div className="flex items-center gap-2">
+                                <div className="p-1.5 bg-indigo-500/20 rounded-lg">
+                                    <Sparkles className="w-4 h-4 text-indigo-400" />
                                 </div>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-3.5 bg-white text-slate-950 hover:bg-indigo-600 hover:text-white font-extrabold text-xs rounded-2xl shadow-xl transition-all uppercase tracking-wider active:scale-95 shrink-0"
+                                <span className="text-[10px] uppercase font-black tracking-widest text-indigo-400">Exclusive Newsletter</span>
+                            </div>
+                            <h3 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight text-white">Stay Tuned with <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Flipko</span></h3>
+                            <p className="text-xs text-slate-400 max-w-md font-medium leading-relaxed">
+                                Subscribe to receive flash deal notifications, product drops, and exclusive member-only discounts delivered straight to your inbox.
+                            </p>
+                            <div className="flex items-center gap-6 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                <div className="flex items-center gap-1.5"><Check className="w-3 h-3 text-emerald-400" /><span>Early Access</span></div>
+                                <div className="flex items-center gap-1.5"><Check className="w-3 h-3 text-emerald-400" /><span>Flash Alerts</span></div>
+                                <div className="flex items-center gap-1.5"><Check className="w-3 h-3 text-emerald-400" /><span>15% Off First Order</span></div>
+                            </div>
+                        </div>
+                        
+                        <div className="w-full sm:w-auto sm:min-w-[340px]">
+                            {newsletterSubscribed ? (
+                                <motion.div 
+                                    initial={{ scale: 0.95, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="bg-indigo-950/60 border border-indigo-500/30 p-5 rounded-2xl flex items-center gap-3 text-sm font-bold text-indigo-300"
                                 >
-                                    Subscribe
-                                </button>
-                            </form>
-                        )}
+                                    <div className="w-8 h-8 bg-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+                                        <Check className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-black text-sm">You're subscribed!</p>
+                                        <p className="text-slate-400 text-xs font-medium mt-0.5">Check your inbox for your 15% discount code.</p>
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+                                    <div className="relative">
+                                        <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                        <input 
+                                            type="email" 
+                                            required
+                                            value={newsletterEmail}
+                                            onChange={(e) => setNewsletterEmail(e.target.value)}
+                                            placeholder="Enter your email address"
+                                            className="w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 focus:border-indigo-500/60 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 font-medium text-white placeholder-slate-500 transition-all"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="w-full px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-900 font-black text-sm rounded-2xl shadow-2xl shadow-amber-500/20 transition-all uppercase tracking-wider active:scale-95 flex items-center justify-center gap-2"
+                                    >
+                                        <Sparkles className="w-4 h-4" />
+                                        Get 15% Off — Subscribe
+                                    </button>
+                                    <p className="text-center text-[10px] text-slate-600 font-medium">No spam. Unsubscribe anytime.</p>
+                                </form>
+                            )}
+                        </div>
                     </div>
                 </section>
 
