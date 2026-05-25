@@ -43,6 +43,8 @@ def restore_images():
                     p.save()
                     updated_count += 1
                     print(f"[UPDATED] {p.name}")
+                else:
+                    print(f"[ALREADY CORRECT] {p.name}")
         else:
             print(f"[NOT FOUND] {name}")
             not_found_count += 1

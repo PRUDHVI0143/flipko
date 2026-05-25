@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../features/cart/cartSlice';
-import axios from 'axios';
+import api from '../api/axios';
 
 const AIChatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +36,9 @@ const AIChatbot = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8080/api/chatbot/chat/', {
+            const response = await api.post('/chatbot/chat/', {
                 message: userMessage
-            }, { withCredentials: true });
+            });
 
             setMessages(prev => [...prev, { 
                 role: 'assistant', 

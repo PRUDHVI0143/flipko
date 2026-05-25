@@ -16,7 +16,8 @@ class CartViewSet(viewsets.ViewSet):
     def get_user(self, request):
         if request.user.is_authenticated:
             return request.user
-        return User.objects.get(username='guest')
+        user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
+        return user
 
     def list(self, request):
         user = self.get_user(request)
@@ -34,7 +35,8 @@ class CartItemViewSet(viewsets.ModelViewSet):
     def get_user(self, request):
         if request.user.is_authenticated:
             return request.user
-        return User.objects.get(username='guest')
+        user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
+        return user
 
     def get_queryset(self):
         user = self.get_user(self.request)

@@ -42,7 +42,6 @@ const Footer = () => {
                 <div className="space-y-4">
                     <h4 className="font-bold text-base text-orange-950 dark:text-white">Make Money with Us</h4>
                     <ul className="text-sm text-orange-800/80 dark:text-slate-400 space-y-2 font-medium">
-                        <li className="hover:underline cursor-pointer">Sell on Flipko</li>
                         <li className="hover:underline cursor-pointer">Supply to Flipko</li>
                         <li className="hover:underline cursor-pointer">Become an Affiliate</li>
                         <li className="hover:underline cursor-pointer">Fulfilment by Flipko</li>

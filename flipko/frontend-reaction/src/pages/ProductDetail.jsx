@@ -3,8 +3,42 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../features/cart/cartSlice';
 import api from '../api/axios';
-import { motion } from 'framer-motion';
-import { ShoppingBag, ChevronLeft, Star, ShieldCheck, Truck, RefreshCw, Heart } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Star, ShieldCheck, Truck, RefreshCw, Heart, CheckCircle2, XCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../components/common/SEO';
+
+// Beautiful Toast Notification Component
+const Toast = ({ toast }) => {
+    if (!toast) return null;
+    const isSuccess = toast.type === 'success';
+    return (
+        <AnimatePresence>
+            <motion.div
+                key="toast"
+                initial={{ opacity: 0, y: -60, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -60, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl min-w-[320px] max-w-[90vw] ${
+                    isSuccess
+                        ? 'bg-emerald-500 text-white shadow-emerald-500/40'
+                        : 'bg-rose-500 text-white shadow-rose-500/40'
+                }`}
+            >
+                <div className={`p-1 rounded-full ${ isSuccess ? 'bg-white/20' : 'bg-white/20' }`}>
+                    {isSuccess
+                        ? <CheckCircle2 className="w-6 h-6 text-white" />
+                        : <XCircle className="w-6 h-6 text-white" />
+                    }
+                </div>
+                <div>
+                    <p className="font-black text-base">{toast.title}</p>
+                    <p className="text-sm font-medium opacity-90">{toast.message}</p>
+                </div>
+            </motion.div>
+        </AnimatePresence>
+    );
+};
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -16,8 +50,14 @@ const ProductDetail = () => {
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
     const [reviewError, setReviewError] = useState('');
+    const [toast, setToast] = useState(null);
     const dispatch = useDispatch();
     const isLoggedIn = !!localStorage.getItem('access_token');
+
+    const showToast = (type, title, message, duration = 3000) => {
+        setToast({ type, title, message });
+        setTimeout(() => setToast(null), duration);
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -76,8 +116,12 @@ const ProductDetail = () => {
     const handleAddToCart = async () => {
         try {
             await dispatch(addToCart({ productId: product.id, quantity })).unwrap();
+            showToast('success', 'Added to Bag!', `${product.name} has been added to your cart.`);
+            return true;
         } catch (error) {
             console.error('Failed to add to cart:', error);
+            showToast('error', 'Failed to Add', 'Could not add item to cart. Please try again.');
+            return false;
         }
     };
 
@@ -96,7 +140,7 @@ const ProductDetail = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-[60vh] bg-transparent dark:bg-dark-900 transition-colors duration-300">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
             </div>
         );
     }
@@ -105,7 +149,7 @@ const ProductDetail = () => {
         return (
             <div className="text-center py-20 bg-transparent dark:bg-dark-900 transition-colors duration-300">
                 <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Product not found</h2>
-                <Link to="/" className="text-primary-600 hover:underline mt-4 inline-block font-bold">Back to shopping</Link>
+                <Link to="/" className="text-amber-600 hover:underline mt-4 inline-block font-bold">Back to shopping</Link>
             </div>
         );
     }
@@ -114,8 +158,15 @@ const ProductDetail = () => {
 
     return (
         <div className="min-h-screen bg-transparent dark:bg-dark-900 pb-24 transition-colors duration-300">
+        <SEO 
+            title={product.name} 
+            description={product.description} 
+            image={product.image?.includes('://') ? product.image : `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}`}
+            type="product"
+        />
+        <Toast toast={toast} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <Link to="/" className="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 mb-8 transition-colors font-bold">
+            <Link to="/" className="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 mb-8 transition-colors font-bold">
                 <ChevronLeft className="w-5 h-5 mr-1" />
                 Back to Gallery
             </Link>
@@ -151,7 +202,7 @@ const ProductDetail = () => {
                             "stationery":     "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80",
                         };
                         const fallback = categoryFallbacks[product.category?.slug] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80";
-                        const imgSrc = product.image?.includes('://') ? product.image : (product.image ? `http://127.0.0.1:8080${product.image}` : fallback);
+                        const imgSrc = product.image?.includes('://') ? product.image : (product.image ? `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}` : fallback);
                         return (
                             <motion.img 
                                 whileHover={{ scale: 1.05 }}
@@ -172,7 +223,7 @@ const ProductDetail = () => {
                     className="flex flex-col"
                 >
                     <div className="mb-2">
-                        <span className="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        <span className="bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                             {product.category?.name || 'Uncategorized'}
                         </span>
                     </div>
@@ -233,7 +284,13 @@ const ProductDetail = () => {
                                 Add to Bag
                             </button>
                             <button 
-                                onClick={async () => { await handleAddToCart(); navigate('/checkout'); }}
+                                onClick={async () => { 
+                                    const success = await handleAddToCart(); 
+                                    if (success) {
+                                        // Small delay for the toast to be seen before navigating
+                                        setTimeout(() => navigate('/checkout'), 800);
+                                    }
+                                }}
                                 className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-5 px-8 rounded-2xl shadow-xl shadow-orange-500/10 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 active:scale-95"
                             >
                                 Buy Now
@@ -371,7 +428,7 @@ const ProductDetail = () => {
                         >
                             <div className="aspect-square bg-slate-50 dark:bg-dark-900 rounded-xl mb-4 overflow-hidden p-4">
                                 <img 
-                                    src={item.image?.includes('://') ? item.image : `http://127.0.0.1:8080${item.image}`} 
+                                    src={item.image?.includes('://') ? item.image : `${import.meta.env.VITE_MEDIA_URL || ''}${item.image}`} 
                                     className="w-full h-full object-contain group-hover:scale-110 transition-transform dark:mix-blend-normal mix-blend-multiply" 
                                     alt={item.name}
                                     onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80"; }}

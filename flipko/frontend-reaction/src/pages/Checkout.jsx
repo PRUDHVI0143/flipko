@@ -53,7 +53,7 @@ const Toast = ({ toast }) => {
 
 const Checkout = () => {
     const navigate = useNavigate();
-    const cartItems = useSelector(state => state.cart.items);
+    const { items: cartItems, loading: cartLoading } = useSelector(state => state.cart);
     const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.product.price) * item.quantity), 0);
     const shipping = subtotal > 500 ? 0 : 40;
     const total = subtotal + shipping;
@@ -201,6 +201,14 @@ const Checkout = () => {
             setLoading(false);
         }
     };
+
+    if (cartLoading) {
+        return (
+            <div className="min-h-screen bg-[#f8fafc] dark:bg-dark-900 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
+            </div>
+        );
+    }
 
     if (cartItems.length === 0) {
         return (
@@ -408,7 +416,7 @@ const Checkout = () => {
                                 <div key={item.id} className="flex gap-4">
                                     <div className="w-16 h-16 bg-slate-50 dark:bg-dark-900 rounded-xl flex-shrink-0 flex items-center justify-center p-2 border border-slate-100 dark:border-slate-700 overflow-hidden">
                                         <img 
-                                            src={item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8080${item.product.image}`} 
+                                            src={item.product.image?.includes('://') ? item.product.image : `${import.meta.env.VITE_MEDIA_URL || ''}${item.product.image}`} 
                                             alt={item.product.name} 
                                             className="w-full h-full object-contain dark:mix-blend-normal mix-blend-multiply"
                                         />

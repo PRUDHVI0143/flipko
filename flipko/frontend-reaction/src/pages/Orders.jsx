@@ -142,7 +142,7 @@ const Orders = () => {
                                         <div key={i} className="flex gap-6 items-center">
                                             <div className="w-20 h-20 bg-white dark:bg-dark-900 rounded-2xl flex-shrink-0 flex items-center justify-center p-3 border border-slate-50 dark:border-slate-700 group-hover:border-amber-50 dark:group-hover:border-amber-500/30 shadow-sm overflow-hidden">
                                                 <img 
-                                                    src={item.product?.image ? (item.product.image?.includes('://') ? item.product.image : `http://127.0.0.1:8080${item.product.image}`) : 'https://placehold.co/400'} 
+                                                    src={item.product?.image ? (item.product.image?.includes('://') ? item.product.image : `${import.meta.env.VITE_MEDIA_URL || ''}${item.product.image}`) : 'https://placehold.co/400'} 
                                                     alt={item.product?.name} 
                                                     className="w-full h-full object-contain transform transition-transform group-hover:scale-110 dark:mix-blend-normal mix-blend-multiply"
                                                 />

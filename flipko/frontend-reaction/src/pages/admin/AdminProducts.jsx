@@ -128,7 +128,7 @@ const AdminProducts = () => {
                     <div className="flex items-center space-x-3">
                       <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
                         {product.image ? (
-                          <img src={product.image.startsWith('http') ? product.image : `http://127.0.0.1:8080${product.image}`} alt="" className="h-full w-full object-cover" />
+                          <img src={product.image.startsWith('http') ? product.image : `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}`} alt="" className="h-full w-full object-cover" />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center text-gray-400">No Img</div>
                         )}

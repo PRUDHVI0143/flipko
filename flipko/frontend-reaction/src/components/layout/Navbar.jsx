@@ -41,6 +41,42 @@ const Navbar = () => {
 
     const username = localStorage.getItem('username');
     const isLoggedIn = !!localStorage.getItem('access_token');
+    const [displayName, setDisplayName] = useState('Guest');
+
+    useEffect(() => {
+        const updateName = () => {
+            if (isLoggedIn && username) {
+                const saved = localStorage.getItem('user_profile');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed.displayName) {
+                            setDisplayName(parsed.displayName);
+                            return;
+                        }
+                    } catch (e) {}
+                }
+                
+                if (username.includes('@')) {
+                    const parts = username.split('@')[0];
+                    setDisplayName(parts.charAt(0).toUpperCase() + parts.slice(1));
+                } else {
+                    setDisplayName(username.charAt(0).toUpperCase() + username.slice(1));
+                }
+            } else {
+                setDisplayName('Guest');
+            }
+        };
+
+        updateName();
+
+        window.addEventListener('profileUpdate', updateName);
+        window.addEventListener('storage', updateName);
+        return () => {
+            window.removeEventListener('profileUpdate', updateName);
+            window.removeEventListener('storage', updateName);
+        };
+    }, [isLoggedIn, username]);
 
     const handleLogout = () => {
         localStorage.removeItem('access_token');
@@ -161,7 +197,7 @@ const Navbar = () => {
                                     >
                                         <div className="w-10 h-10 bg-slate-50 rounded-lg flex-shrink-0 p-1 flex items-center justify-center">
                                             <img 
-                                                src={item.image.startsWith('http') ? item.image : `http://127.0.0.1:8080${item.image}`} 
+                                                src={item.image.startsWith('http') ? item.image : `${import.meta.env.VITE_MEDIA_URL || ''}${item.image}`} 
                                                 className="w-full h-full object-contain"
                                                 alt={item.name}
                                             />
@@ -218,7 +254,7 @@ const Navbar = () => {
                             onClick={() => !isLoggedIn && navigate('/login')}
                             className="px-3 py-1 cursor-pointer hover:outline hover:outline-1 hover:outline-white/50 rounded-sm lg:flex flex-col hidden relative"
                         >
-                            <span className="text-[11px] text-slate-400 leading-none">Hello, {isLoggedIn ? username : 'Guest'}</span>
+                            <span className="text-[11px] text-slate-400 leading-none">Hello, {displayName}</span>
                             <div className="flex items-center">
                                 <span className="text-sm font-bold">Account & Lists</span>
                                 <ChevronDown className="w-3 h-3 ml-1 text-slate-400" />
@@ -246,7 +282,7 @@ const Navbar = () => {
                                             ) : (
                                                 <div className="text-center bg-slate-50 p-3 rounded-lg border border-slate-100">
                                                     <p className="text-sm font-semibold text-slate-800">Welcome back,</p>
-                                                    <p className="text-amber-600 font-bold">{username}</p>
+                                                    <p className="text-amber-600 font-bold">{displayName}</p>
                                                 </div>
                                             )}
                                             <div className="border-t border-slate-100 pt-4">
@@ -326,7 +362,6 @@ const Navbar = () => {
                     </Link>
                     <Link to="/orders" className="hover:text-orange-600 dark:hover:text-white transition-colors">Customer Service</Link>
                     <Link to="/wishlist" className="hover:text-orange-600 dark:hover:text-white transition-colors">Your Wishlist</Link>
-                    <span className="hover:text-orange-600 dark:hover:text-white transition-colors cursor-pointer">Sell on Flipko</span>
                 </div>
 
                 <div className="flex-1"></div>
