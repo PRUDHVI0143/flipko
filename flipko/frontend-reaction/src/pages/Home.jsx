@@ -104,17 +104,17 @@ const Home = () => {
     const [activeBanner, setActiveBanner] = useState(0);
     const banners = [
         { 
-            img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=2070", 
+            img: "/hero-tech.png", 
             title: "Next-Gen Tech Hub",
             subtitle: "Discover the future of computing, immersive audio, and premium gaming."
         },
         { 
-            img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2070", 
+            img: "/hero-fashion.png", 
             title: "Designer Fashion",
-            subtitle: "Elevate your style statement with our exclusive streetwear collection."
+            subtitle: "Elevate your style statement with our exclusive curated collections."
         },
         { 
-            img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000", 
+            img: "/ad-home.png", 
             title: "Modern Living Spaces",
             subtitle: "Transform your home with luxury furnishings and culinary essentials."
         }
@@ -647,7 +647,7 @@ const Home = () => {
                             className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
                         >
                             <img 
-                                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800" 
+                                src="/ad-electronics.png" 
                                 alt="Electronics Deals" 
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
@@ -673,7 +673,7 @@ const Home = () => {
                             className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
                         >
                             <img 
-                                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800" 
+                                src="/ad-fashion.png" 
                                 alt="Fashion Deals" 
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
@@ -699,7 +699,7 @@ const Home = () => {
                             className="relative rounded-[2rem] overflow-hidden cursor-pointer group h-52 sm:h-56"
                         >
                             <img 
-                                src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" 
+                                src="/ad-home.png" 
                                 alt="Home & Kitchen" 
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
