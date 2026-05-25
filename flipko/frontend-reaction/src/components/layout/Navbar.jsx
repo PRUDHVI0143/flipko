@@ -42,6 +42,8 @@ const Navbar = () => {
     const username = localStorage.getItem('username');
     const isLoggedIn = !!localStorage.getItem('access_token');
     const [displayName, setDisplayName] = useState('Guest');
+    const [avatarGradient, setAvatarGradient] = useState('from-slate-600 to-slate-700');
+    const [tier, setTier] = useState('VIP Member');
 
     useEffect(() => {
         const updateName = () => {
@@ -50,10 +52,10 @@ const Navbar = () => {
                 if (saved) {
                     try {
                         const parsed = JSON.parse(saved);
-                        if (parsed.displayName) {
-                            setDisplayName(parsed.displayName);
-                            return;
-                        }
+                        if (parsed.displayName) setDisplayName(parsed.displayName);
+                        if (parsed.avatarGradient) setAvatarGradient(parsed.avatarGradient);
+                        if (parsed.tier) setTier(parsed.tier);
+                        return;
                     } catch (e) {}
                 }
                 
@@ -63,8 +65,12 @@ const Navbar = () => {
                 } else {
                     setDisplayName(username.charAt(0).toUpperCase() + username.slice(1));
                 }
+                setAvatarGradient('from-indigo-500 to-purple-600');
+                setTier('Platinum Club Member');
             } else {
                 setDisplayName('Guest');
+                setAvatarGradient('from-slate-600 to-slate-700');
+                setTier('VIP Member');
             }
         };
 
@@ -264,51 +270,85 @@ const Navbar = () => {
                             <AnimatePresence>
                                 {isProfileOpen && (
                                     <motion.div 
-                                        initial={{ opacity: 0, y: 10 }}
+                                        initial={{ opacity: 0, y: 15 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="absolute top-full right-0 mt-0 w-64 bg-white shadow-2xl rounded-lg p-5 text-slate-900 z-[100] cursor-default border border-slate-200"
+                                        exit={{ opacity: 0, y: 15 }}
+                                        className="absolute top-full right-0 mt-2 w-72 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-3xl p-5 text-slate-900 dark:text-white z-[100] cursor-default border border-slate-100 dark:border-slate-800/80"
                                     >
                                         <div className="flex flex-col gap-4">
-                                            {!isLoggedIn ? (
-                                                <>
-                                                    <Link to="/login" className="bg-gradient-to-b from-amber-300 to-amber-500 text-center py-2 rounded-lg font-bold text-sm shadow-md hover:from-amber-400 hover:to-amber-500 border border-amber-600 transition-all active:scale-95">
-                                                        Sign in
-                                                    </Link>
-                                                    <div className="text-[11px] text-center text-slate-500">
-                                                        New customer? <Link to="/signup" className="text-blue-600 hover:underline font-bold">Start here.</Link>
+                                            {isLoggedIn ? (
+                                                <div className="flex items-center gap-3 bg-slate-50 dark:bg-dark-950/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-800/60">
+                                                    <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white text-base font-black border border-white/20 shadow-md`}>
+                                                        {displayName.charAt(0).toUpperCase()}
                                                     </div>
-                                                </>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Welcome back,</p>
+                                                        <p className="font-black text-sm text-slate-800 dark:text-white truncate leading-none">{displayName}</p>
+                                                        <span className="inline-block text-[8px] font-black text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-1">★ {tier}</span>
+                                                    </div>
+                                                </div>
                                             ) : (
-                                                <div className="text-center bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                                    <p className="text-sm font-semibold text-slate-800">Welcome back,</p>
-                                                    <p className="text-amber-600 font-bold">{displayName}</p>
+                                                <div className="flex flex-col gap-2.5 text-center">
+                                                    <Link to="/login" className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white font-extrabold text-xs py-2.5 rounded-xl shadow-md hover:scale-[1.02] transition-transform text-center active:scale-95">
+                                                        Sign In
+                                                    </Link>
+                                                    <p className="text-[10px] text-slate-400 font-bold">
+                                                        New customer? <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 font-black hover:underline">Start here.</Link>
+                                                    </p>
                                                 </div>
                                             )}
-                                            <div className="border-t border-slate-100 pt-4">
-                                                <div className="flex gap-4">
-                                                    <div className="flex-1">
-                                                         <h4 className="font-bold text-sm mb-2 text-slate-800 border-b pb-1">Your Lists</h4>
-                                                         <ul className="text-xs space-y-2 text-slate-600 font-medium">
-                                                            <li className="hover:text-amber-600 cursor-pointer" onClick={() => navigate('/wishlist')}>Wish List</li>
-                                                            <li className="hover:text-amber-600 cursor-pointer" onClick={() => navigate('/wishlist')}>Favorites</li>
-                                                         </ul>
-                                                    </div>
-                                                    <div className="flex-1 border-l pl-4">
-                                                         <h4 className="font-bold text-sm mb-2 text-slate-800 border-b pb-1">Your Account</h4>
-                                                         <ul className="text-xs space-y-2 text-slate-600 font-medium">
-                                                            <li className="hover:text-amber-600 cursor-pointer flex items-center gap-2" onClick={() => navigate('/orders')}>
-                                                                <Package className="w-3 h-3" /> Orders
+                                            
+                                            <div className="border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    {/* Left Column: Lists */}
+                                                    <div>
+                                                        <h4 className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 pb-1 border-b border-slate-50 dark:border-slate-800/60">Your Lists</h4>
+                                                        <ul className="text-[11px] space-y-2.5 text-slate-600 dark:text-slate-400 font-bold">
+                                                            <li 
+                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
+                                                                onClick={() => navigate('/wishlist')}
+                                                            >
+                                                                <Heart className="w-3.5 h-3.5 text-rose-500" />
+                                                                <span>Wish List</span>
                                                             </li>
-                                                            <li className="hover:text-amber-600 cursor-pointer flex items-center gap-2" onClick={() => navigate('/account')}>
-                                                                <User className="w-3 h-3" /> Account
+                                                            <li 
+                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
+                                                                onClick={() => navigate('/wishlist')}
+                                                            >
+                                                                <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                                                <span>Favorites</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    {/* Right Column: Account */}
+                                                    <div className="border-l border-slate-100 dark:border-slate-800/80 pl-3">
+                                                        <h4 className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 pb-1 border-b border-slate-50 dark:border-slate-800/60">Your Account</h4>
+                                                        <ul className="text-[11px] space-y-2.5 text-slate-600 dark:text-slate-400 font-bold">
+                                                            <li 
+                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
+                                                                onClick={() => navigate('/orders')}
+                                                            >
+                                                                <Package className="w-3.5 h-3.5 text-indigo-500" />
+                                                                <span>Orders</span>
+                                                            </li>
+                                                            <li 
+                                                                className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer flex items-center gap-2 transition-all hover:translate-x-0.5" 
+                                                                onClick={() => navigate('/account')}
+                                                            >
+                                                                <User className="w-3.5 h-3.5 text-indigo-500" />
+                                                                <span>Account</span>
                                                             </li>
                                                             {isLoggedIn && (
-                                                                <li onClick={handleLogout} className="hover:text-amber-600 cursor-pointer flex items-center gap-2 text-red-500">
-                                                                    <LogOut className="w-3 h-3" /> Sign Out
+                                                                <li 
+                                                                    onClick={handleLogout} 
+                                                                    className="hover:text-rose-600 cursor-pointer flex items-center gap-2 text-rose-500 dark:text-rose-450 transition-all hover:translate-x-0.5"
+                                                                >
+                                                                    <LogOut className="w-3.5 h-3.5" />
+                                                                    <span>Sign Out</span>
                                                                 </li>
                                                             )}
-                                                         </ul>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
