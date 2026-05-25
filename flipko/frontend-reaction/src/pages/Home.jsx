@@ -1150,26 +1150,35 @@ const Home = () => {
 
 // Category fallback images for loading safeties
 const CATEGORY_FALLBACKS = {
-    "mobiles":        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80",
+    "mobiles":         "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80",
     "electronics":    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
     "fashion":        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
     "home-kitchen":   "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
     "grocery":        "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80",
     "books":          "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80",
+    "beauty":         "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80",
     "beauty-grooming":"https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80",
-    "toys-games":     "https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&q=80",
+    "toys":           "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&q=80",
+    "toys-games":     "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&q=80",
+    "sports":         "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80",
     "sports-outdoor": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80",
-    "stationery":     "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80",
+    "stationery":     "https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=800&q=80",
 };
 
 // Refined ProductCard Component with Quick View and Heart icons stacked top right
 const ProductCard = ({ product, navigate, dispatch, index, trending = false, isWishlisted, onToggleWishlist, onQuickView }) => {
-    const isLocal = product.image && !product.image.includes('://');
-    const imageUrl = isLocal ? `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}` : product.image;
-    const fallbackUrl = CATEGORY_FALLBACKS[product.category?.slug] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80";
+    const [imgLoaded, setImgLoaded] = React.useState(false);
+    const [imgError, setImgError] = React.useState(false);
+
+    const isLocal = product.image && !product.image.startsWith('http');
+    const imageUrl = isLocal
+        ? `${import.meta.env.VITE_MEDIA_URL || ''}${product.image}`
+        : product.image;
+    const fallbackUrl = CATEGORY_FALLBACKS[product.category?.slug] || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80";
 
     const handleImgError = (e) => {
-        if (e.target.src !== fallbackUrl) {
+        if (!imgError) {
+            setImgError(true);
             e.target.src = fallbackUrl;
         }
     };
@@ -1210,14 +1219,20 @@ const ProductCard = ({ product, navigate, dispatch, index, trending = false, isW
             </div>
 
             {/* Product Image Container */}
-            <div className="relative aspect-[4/5] bg-white dark:bg-dark-950/20 overflow-hidden p-6 flex items-center justify-center border-b border-slate-50 dark:border-slate-900/60">
+            <div className="relative aspect-[4/5] bg-slate-50 dark:bg-dark-950/20 overflow-hidden p-6 flex items-center justify-center border-b border-slate-50 dark:border-slate-900/60">
                 <div className="absolute inset-0 bg-gradient-to-tr from-slate-200/20 to-transparent mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
+                {/* Skeleton shimmer while image loads */}
+                {!imgLoaded && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-100 via-slate-50 to-slate-100 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800 animate-pulse"></div>
+                )}
+
                 <img 
                     src={imageUrl || fallbackUrl} 
                     alt={product.name} 
-                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-105"
+                    className={`object-contain w-full h-full transform transition-all duration-500 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
                     loading="lazy"
+                    onLoad={() => setImgLoaded(true)}
                     onError={handleImgError}
                 />
                 
